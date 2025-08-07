@@ -3,6 +3,14 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Send } from 'lucide-react';
+import emailjs from 'emailjs-com';
+
+// INSTRUCCIONES:
+// 1. Crea una cuenta en https://www.emailjs.com/
+// 2. Crea un servicio (Service ID) y una plantilla (Template ID) con los campos: name, email, subject, message.
+// 3. Obtén tu Public Key.
+// 4. Rellena las variables EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID y EMAILJS_PUBLIC_KEY abajo con tus datos.
+// 5. ¡Listo! El formulario enviará correos reales.
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -20,18 +28,34 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
-      console.log('Form submitted:', formData);
-      setIsSubmitting(false);
-      // Reset form
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 1000);
-  };
+  const EMAILJS_SERVICE_ID = 'service_m9w7qe9';
+const EMAILJS_TEMPLATE_ID = 'template_cd3yxkp';
+const EMAILJS_PUBLIC_KEY = 'h7-l3wu7nZGaU3uEo';
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+
+  try {
+    await emailjs.send(
+      EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_ID,
+      {
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+      },
+      EMAILJS_PUBLIC_KEY
+    );
+    alert('¡Mensaje enviado correctamente!');
+    setFormData({ name: '', email: '', subject: '', message: '' });
+  } catch (_) {
+    alert('Error al enviar el mensaje. Intenta de nuevo.');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <section id="contact" className="py-24 px-6 lg:px-8 bg-[#0a192f]">

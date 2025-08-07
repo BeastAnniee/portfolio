@@ -32,7 +32,7 @@ const Header = () => {
     <motion.header
       initial={{ y: -25, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 1, delay: 2 }}
+      transition={{ duration: 0.35, delay: 0.5 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 hidden lg:block ${
         isScrolled 
           ? 'bg-[#0a192f]/95 backdrop-blur-md shadow-sm' 
@@ -45,7 +45,7 @@ const Header = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 2.5 }}
+            transition={{ duration: 0.25, delay: 0.7 }}
             className="relative"
           >
             <motion.div
@@ -84,7 +84,7 @@ const Header = () => {
               className="ml-4 px-4 py-2 border border-[#64ffda] text-[#64ffda] font-mono text-sm rounded hover:bg-[#64ffda]/10 transition-all duration-300"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 2.5 }}
+              transition={{ duration: 0.25, delay: 0.7 }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

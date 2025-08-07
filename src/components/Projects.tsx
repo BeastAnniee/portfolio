@@ -87,7 +87,7 @@ const Projects = () => {
           viewport={{ once: true }}
           className="flex items-center gap-4 mb-16"
         >
-          <span className="text-[#64ffda] font-mono text-xl">03.</span>
+          <span className="text-[#64ffda] font-mono text-xl">02.</span>
           <h2 className="text-2xl sm:text-3xl font-bold text-[#ccd6f6]">Some Things I&apos;ve Built</h2>
           <div className="flex-1 h-px bg-[#233554] ml-4"></div>
         </motion.div>
