@@ -105,13 +105,13 @@ const About = () => {
                   View Resume
                 </a>
                 <a
-                  href="/cover-letter.pdf"
+                  href="/story.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-4 py-2 border border-[#233554] text-[#8892b0] font-mono text-sm rounded hover:bg-[#233554]/60 hover:text-[#64ffda] transition-all duration-300 text-center shadow-none"
                   title="Open Cover Letter in new tab"
                 >
-                  View Cover Letter
+                  View more of me
                 </a>
               </div>
             </div>

@@ -4,7 +4,15 @@ import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail } from 'lucide-react';
 import Particles from './Particles';
 
+import { useState } from 'react';
+
 const Hero = () => {
+  const [showCopied, setShowCopied] = useState(false);
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText('jostinaval@gmail.com');
+    setShowCopied(true);
+    setTimeout(() => setShowCopied(false), 2500);
+  }
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Animated Particles Background */}
@@ -116,13 +124,14 @@ const Hero = () => {
           <Linkedin className="w-5 h-5" />
         </motion.a>
         
-        <motion.a
-          href="mailto:jostinaval@gmail.com"
-          className="text-[#8892b0] hover:text-[#64ffda] hover:-translate-y-1 transition-all duration-300"
+        <motion.button
+          onClick={handleCopyEmail}
+          className="text-[#8892b0] hover:text-[#64ffda] hover:-translate-y-1 transition-all duration-300 focus:outline-none"
           whileHover={{ scale: 1.1 }}
+          aria-label="Copiar correo electrónico"
         >
           <Mail className="w-5 h-5" />
-        </motion.a>
+        </motion.button>
         
         <div className="w-px h-24 bg-[#8892b0] mt-6"></div>
       </motion.div>
@@ -134,17 +143,25 @@ const Hero = () => {
         transition={{ duration: 0.6, delay: 0.9 }}
         className="fixed right-10 bottom-0 hidden lg:flex flex-col items-center gap-6 z-20"
       >
-        <motion.a
-          href="mailto:jostinaval@gmail.com"
-          className="text-[#8892b0] hover:text-[#64ffda] font-mono text-sm tracking-widest hover:-translate-y-1 transition-all duration-300"
+        <motion.button
+          onClick={handleCopyEmail}
+          className="text-[#8892b0] hover:text-[#64ffda] font-mono text-sm tracking-widest hover:-translate-y-1 transition-all duration-300 focus:outline-none"
           style={{ writingMode: 'vertical-rl' }}
           whileHover={{ scale: 1.05 }}
+          aria-label="Copiar correo electrónico"
         >
           jostinaval@gmail.com
-        </motion.a>
+        </motion.button>
         
         <div className="w-px h-24 bg-[#8892b0] mt-6"></div>
       </motion.div>
+      
+      {/* Toast Copiado */}
+      {showCopied && (
+        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-[#233554] text-[#64ffda] px-6 py-3 rounded shadow-lg font-sans text-base z-50 animate-fade-in">
+          ¡Correo copiado al portapapeles!
+        </div>
+      )}
     </section>
   );
 };

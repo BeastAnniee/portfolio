@@ -3,7 +3,15 @@
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Heart } from 'lucide-react';
 
+import { useState } from 'react';
+
 const Footer = () => {
+  const [showCopied, setShowCopied] = useState(false);
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText('jostinaval@gmail.com');
+    setShowCopied(true);
+    setTimeout(() => setShowCopied(false), 2500);
+  }
   const socialLinks = [
     {
       name: 'GitHub',
@@ -17,8 +25,9 @@ const Footer = () => {
     },
     {
       name: 'Email',
-      url: 'mailto:jostinaval@gmail.com',
-      icon: Mail
+      url: '', // Se reemplazará el comportamiento por onClick
+      icon: Mail,
+      isEmail: true
     }
   ];
 
@@ -34,21 +43,35 @@ const Footer = () => {
           className="flex justify-center gap-8 mb-8 lg:hidden"
         >
           {socialLinks.map((link) => {
-            const Icon = link.icon;
-            return (
-              <motion.a
-                key={link.name}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#8892b0] hover:text-[#64ffda] hover:-translate-y-1 transition-all duration-300"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Icon className="w-6 h-6" />
-              </motion.a>
-            );
-          })}
+  const Icon = link.icon;
+  if (link.isEmail) {
+    return (
+      <motion.button
+        key={link.name}
+        onClick={handleCopyEmail}
+        className="text-[#8892b0] hover:text-[#64ffda] hover:-translate-y-1 transition-all duration-300 focus:outline-none"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        aria-label="Copiar correo electrónico"
+      >
+        <Icon className="w-6 h-6" />
+      </motion.button>
+    );
+  }
+  return (
+    <motion.a
+      key={link.name}
+      href={link.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-[#8892b0] hover:text-[#64ffda] hover:-translate-y-1 transition-all duration-300"
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      <Icon className="w-6 h-6" />
+    </motion.a>
+  );
+})}
         </motion.div>
 
         {/* Footer Text */}
@@ -88,6 +111,12 @@ const Footer = () => {
           </motion.div>
         </motion.div>
       </div>
+      {/* Toast Copiado */}
+      {showCopied && (
+        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-[#233554] text-[#64ffda] px-6 py-3 rounded shadow-lg font-sans text-base z-50 animate-fade-in">
+          ¡Correo copiado al portapapeles!
+        </div>
+      )}
     </footer>
   );
 };

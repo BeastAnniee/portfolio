@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { ExternalLink, Github, Folder } from 'lucide-react';
 
 const Projects = () => {
@@ -10,24 +11,24 @@ const Projects = () => {
       description: 'A web app for visualizing personalized Spotify data. View your top artists, top tracks, recently played tracks, and detailed audio information about each track. Create and save new playlists of recommended tracks based on your existing playlists and more.',
       tech: ['React', 'Express', 'Spotify API', 'Heroku'],
       github: 'https://github.com',
-      external: 'https://spotify-profile.herokuapp.com/',
-      image: '/api/placeholder/600/400'
+      external: '/demo',
+      image: '/404.png'
     },
     {
       title: 'Halcyon Theme',
       description: 'A minimal, dark blue theme for VS Code, Sublime Text, Atom, iTerm, and more. Available on Visual Studio Marketplace, Package Control, Atom Package Manager, and npm.',
       tech: ['VS Code', 'Sublime Text', 'Atom', 'iTerm2', 'Hyper'],
       github: 'https://github.com',
-      external: 'https://marketplace.visualstudio.com/',
-      image: '/api/placeholder/600/400'
+      external: '/demo',
+      image: '/404.png'
     },
     {
-      title: 'Build a Spotify Connected App',
-      description: 'Video course that teaches how to build a web app with the Spotify Web API. Topics covered include the principles of REST APIs, user auth flows, Node, Express, React, Styled Components, and more.',
-      tech: ['React', 'Node.js', 'Express', 'Spotify API'],
-      github: 'https://github.com',
-      external: 'https://www.newline.co/',
-      image: '/api/placeholder/600/400'
+      title: 'Portfolio',
+      description: 'A personal portfolio showcasing selected projects and ideas — built with Next.js, Tailwind CSS, and TypeScript. Focused on purposeful design and clean code.',
+      tech: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'],
+      github: 'https://github.com/BeastAnniee/portfolio',
+      external: 'https://portfolio-2woc3j0d4-beastanniees-projects.vercel.app/',
+      image: '/portfolio.png'
     }
   ];
 
@@ -37,42 +38,42 @@ const Projects = () => {
       description: 'Building a custom search with Algolia in a React app',
       tech: ['Algolia', 'React', 'Gatsby'],
       github: 'https://github.com',
-      external: 'https://algolia.com'
+      external: '/demo'
     },
     {
       title: 'React Profile',
       description: 'Online resume built with React and GitHub API',
       tech: ['React', 'GitHub API'],
       github: 'https://github.com',
-      external: 'https://github.com'
+      external: '/demo'
     },
     {
       title: 'Spotify Top Tracks',
       description: 'React app to display user\'s top tracks and artists',
       tech: ['React', 'Spotify API', 'Express'],
       github: 'https://github.com',
-      external: 'https://spotify.com'
+      external: '/demo'
     },
     {
       title: 'Weather App',
       description: 'Simple weather app built with vanilla JavaScript',
       tech: ['JavaScript', 'OpenWeather API', 'Sass'],
       github: 'https://github.com',
-      external: 'https://openweathermap.org'
+      external: '/demo'
     },
     {
       title: 'Headless WordPress',
       description: 'Headless WordPress site built with Next.js and WPGraphQL',
       tech: ['Next.js', 'WordPress', 'GraphQL'],
       github: 'https://github.com',
-      external: 'https://wordpress.org'
+      external: '/demo'
     },
     {
       title: 'Personal Website v1',
       description: 'First iteration of my personal website built with Jekyll',
       tech: ['Jekyll', 'Sass', 'JavaScript'],
       github: 'https://github.com',
-      external: 'https://jekyllrb.com'
+      external: '/demo'
     }
   ];
 
@@ -118,12 +119,20 @@ const Projects = () => {
                 {/* Project Image - Desktop */}
                 <div className={`md:col-span-7 ${index % 2 === 1 ? 'md:order-2' : ''}`}>
                   <div className="relative group">
-                    <div className="bg-[#64ffda]/20 aspect-video rounded border border-[#64ffda]/30 overflow-hidden">
-                      <div className="w-full h-full bg-gradient-to-br from-[#64ffda]/10 to-[#64ffda]/5 flex items-center justify-center">
-                        <span className="text-[#64ffda] font-mono">Project Image</span>
-                      </div>
-                      <div className="absolute inset-0 bg-[#0a192f]/80 group-hover:bg-transparent transition-all duration-300"></div>
-                    </div>
+                    <motion.div
+                      whileHover={{ scale: 1.04, y: -6 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                      className="bg-[#64ffda]/20 aspect-video rounded border border-[#64ffda]/30 overflow-hidden relative cursor-pointer"
+                    >
+                      <Image
+                        src={project.image}
+                        alt={project.title + ' preview'}
+                        fill
+                        className="object-cover w-full h-full"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        priority={index === 0}
+                      />
+                    </motion.div>
                   </div>
                 </div>
 

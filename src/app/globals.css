@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
+/* =========================
+   VARIABLES GLOBALES
+========================= */
 :root {
   /* Temporary Color Palette */
   --color-primary: #1A1A2E;
@@ -56,6 +59,9 @@
   --shadow-glow: 0 0 20px rgb(255 51 51 / 0.3);
 }
 
+/* =========================
+   ESTILOS BASE
+========================= */
 @layer base {
   *, ::before, ::after {
     border-color: var(--color-border);

@@ -5,14 +5,9 @@ import { useState } from 'react';
 import { Send } from 'lucide-react';
 import emailjs from 'emailjs-com';
 
-// INSTRUCCIONES:
-// 1. Crea una cuenta en https://www.emailjs.com/
-// 2. Crea un servicio (Service ID) y una plantilla (Template ID) con los campos: name, email, subject, message.
-// 3. Obtén tu Public Key.
-// 4. Rellena las variables EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID y EMAILJS_PUBLIC_KEY abajo con tus datos.
-// 5. ¡Listo! El formulario enviará correos reales.
-
 const Contact = () => {
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -28,9 +23,9 @@ const Contact = () => {
     });
   };
 
-  const EMAILJS_SERVICE_ID = 'service_m9w7qe9';
-const EMAILJS_TEMPLATE_ID = 'template_cd3yxkp';
-const EMAILJS_PUBLIC_KEY = 'h7-l3wu7nZGaU3uEo';
+const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
+const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!;
+const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
 
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -48,10 +43,12 @@ const handleSubmit = async (e: React.FormEvent) => {
       },
       EMAILJS_PUBLIC_KEY
     );
-    alert('¡Mensaje enviado correctamente!');
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 3500);
     setFormData({ name: '', email: '', subject: '', message: '' });
   } catch (_) {
-    alert('Error al enviar el mensaje. Intenta de nuevo.');
+    setShowError(true);
+    setTimeout(() => setShowError(false), 3500);
   } finally {
     setIsSubmitting(false);
   }
@@ -60,6 +57,19 @@ const handleSubmit = async (e: React.FormEvent) => {
   return (
     <section id="contact" className="py-24 px-6 lg:px-8 bg-[#0a192f]">
       <div className="max-w-2xl mx-auto">
+        {/* Toast de éxito */}
+        {showSuccess && (
+          <div className="fixed top-8 left-1/2 transform -translate-x-1/2 bg-[#233554] text-[#64ffda] px-6 py-3 rounded shadow-lg font-sans text-base z-50 animate-fade-in">
+            ¡Tu mensaje fue enviado exitosamente! Pronto me pondré en contacto contigo.
+          </div>
+        )}
+        {/* Toast de error */}
+        {showError && (
+          <div className="fixed top-8 left-1/2 transform -translate-x-1/2 bg-[#ff4d4f] text-white px-6 py-3 rounded shadow-lg font-sans text-base z-50 animate-fade-in">
+            Ocurrió un error al enviar tu mensaje. Intenta de nuevo más tarde.
+          </div>
+        )}
+
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -68,7 +78,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <span className="text-[#64ffda] font-mono text-base block mb-4">04. What&apos;s Next?</span>
+          <span className="text-[#64ffda] font-mono text-base block mb-4">03. What&apos;s Next?</span>
           <h2 className="text-4xl sm:text-5xl font-bold text-[#ccd6f6] mb-6">Get In Touch</h2>
           <p className="text-[#8892b0] text-lg leading-relaxed max-w-lg mx-auto">
             I&apos;m always open to discussing new opportunities, collaborations, or just having a chat about technology. Drop me a message!
