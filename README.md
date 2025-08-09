@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio — Jostin Aldair Nava López
 
-## Getting Started
+A personal portfolio built with Next.js, TypeScript, and Tailwind CSS. Showcases selected projects, skills, and contact information with a modern, animated, and accessible UI.
 
-First, run the development server:
+![Portfolio Screenshot](public/portfolio.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Modern stack:** Next.js (App Router), React, TypeScript, Tailwind CSS
+- **Framer Motion** for smooth animations
+- **Responsive** and mobile-first design
+- **Accessible**: keyboard navigation, aria labels
+- **Contact form** with EmailJS integration and toast feedback
+- **Project cards** with hover and reveal animations
+- **Dark color palette** for a focused UI
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🚀 Getting Started
 
-To learn more about Next.js, take a look at the following resources:
+1. **Clone the repo:**
+   ```bash
+   git clone https://github.com/BeastAnniee/portfolio.git
+   cd portfolio
+   ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   # or yarn install
+   ```
+3. **Set up environment variables:**
+   - Copy `.env.local.example` to `.env.local` and fill in your EmailJS keys:
+     ```env
+     NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
+     NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
+     NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
+     ```
+4. **Run the development server:**
+   ```bash
+   npm run dev
+   # or yarn dev
+   ```
+5. **Open** [aldairdev.vercel.app](https://portfolio-2woc3j0d4-beastanniees-projects.vercel.app/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠️ Customization
 
-## Deploy on Vercel
+- Edit your info and links in `src/components/Hero.tsx`, `Footer.tsx`, and `About.tsx`.
+- Add or update projects in `src/components/Projects.tsx`.
+- Update contact methods and social links in `Footer.tsx`.
+- Change the 404 message in `src/app/not-found.tsx`.
+- Styles are easily customizable via Tailwind classes.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🌐 Deployment
+
+Deploy easily on [Vercel](https://vercel.com/) (recommended for Next.js):
+- Push your repo to GitHub
+- Import into Vercel and set your environment variables
+- Deploy!
+
+---
+
+## 📦 Tech Stack
+- [Next.js](https://nextjs.org/)
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Framer Motion](https://www.framer.com/motion/)
+- [EmailJS](https://www.emailjs.com/) (for contact form)
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+## 🙋‍♂️ Contact
+
+Feel free to reach out via the contact form on the site or email: jostinaval@gmail.com
+
+---
+
+## Credits
+- Inspired by many amazing portfolios in the dev community
+- Designed & coded by [Jostin Aldair Nava López](https://github.com/BeastAnniee)
