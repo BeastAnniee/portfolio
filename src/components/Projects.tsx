@@ -7,18 +7,18 @@ import { ExternalLink, Github, Folder } from 'lucide-react';
 const Projects = () => {
   const featuredProjects = [
     {
-      title: 'Spotify Profile',
-      description: 'A web app for visualizing personalized Spotify data. View your top artists, top tracks, recently played tracks, and detailed audio information about each track. Create and save new playlists of recommended tracks based on your existing playlists and more.',
-      tech: ['React', 'Express', 'Spotify API', 'Heroku'],
-      github: 'https://github.com',
+      title: 'Archive',
+      description: 'Web platform for STEAM students to upload, document, and showcase academic projects. Helps build a professional portfolio with categories, charts, and community sharing.',
+      tech: ['React', 'Next.js', 'TypeScript', 'Node.js', 'MongoDB'],
+      github: 'https://github.com/BeastAnniee/archive',
       external: '/demo',
       image: '/404.png'
     },
     {
-      title: 'Halcyon Theme',
-      description: 'A minimal, dark blue theme for VS Code, Sublime Text, Atom, iTerm, and more. Available on Visual Studio Marketplace, Package Control, Atom Package Manager, and npm.',
-      tech: ['VS Code', 'Sublime Text', 'Atom', 'iTerm2', 'Hyper'],
-      github: 'https://github.com',
+      title: 'Bitlytics',
+      description: 'Fullstack app for real-time cryptocurrency tracking and analysis. Python backend fetches and processes data from the Coinlore API. React frontend displays an interactive dashboard with dynamic charts, stats, and filters.',
+      tech: ['React', 'Next.js', 'Python', 'Coinlore API'],
+      github: 'https://github.com/BeastAnniee/bitlytics',
       external: '/demo',
       image: '/404.png'
     },
@@ -27,52 +27,52 @@ const Projects = () => {
       description: 'A personal portfolio showcasing selected projects and ideas — built with Next.js, Tailwind CSS, and TypeScript. Focused on purposeful design and clean code.',
       tech: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'],
       github: 'https://github.com/BeastAnniee/portfolio',
-      external: 'https://portfolio-2woc3j0d4-beastanniees-projects.vercel.app/',
+      external: 'https://aldairdev.vercel.app/',
       image: '/portfolio.png'
     }
   ];
 
   const otherProjects = [
     {
-      title: 'Integrating Algolia Search',
-      description: 'Building a custom search with Algolia in a React app',
-      tech: ['Algolia', 'React', 'Gatsby'],
-      github: 'https://github.com',
+      title: 'Curve Fitting and Interpolation',
+      description: 'Scripts demonstrating curve fitting and interpolation techniques',
+      tech: ['Python', 'NumPy', 'Sympy', 'Matplotlib', 'Pandas'],
+      github: 'https://github.com/BeastAnniee/curve-fitting-and-interpolation',
       external: '/demo'
     },
     {
-      title: 'React Profile',
-      description: 'Online resume built with React and GitHub API',
-      tech: ['React', 'GitHub API'],
-      github: 'https://github.com',
+      title: 'Numerical Methods',
+      description: 'Practice and apply numerical methods across topics',
+      tech: ['Python', 'NumPy', 'Matplotlib'],
+      github: 'https://github.com/BeastAnniee/numerical-methods',
       external: '/demo'
     },
     {
-      title: 'Spotify Top Tracks',
-      description: 'React app to display user\'s top tracks and artists',
-      tech: ['React', 'Spotify API', 'Express'],
-      github: 'https://github.com',
+      title: 'Blackjack Console Game',
+      description: 'Blackjack game built with Python',
+      tech: ['Python', 'Matplotlib'],
+      github: 'https://github.com/BeastAnniee/blackjack-console',
       external: '/demo'
     },
     {
-      title: 'Weather App',
-      description: 'Simple weather app built with vanilla JavaScript',
-      tech: ['JavaScript', 'OpenWeather API', 'Sass'],
-      github: 'https://github.com',
+      title: 'Equation Root Finding',
+      description: 'Implementation of various numerical methods to solve nonlinear equations',
+      tech: ['Python', 'NumPy', 'Sympy', 'Matplotlib', 'Pandas'],
+      github: 'https://github.com/BeastAnniee/equation-root-finding',
       external: '/demo'
     },
     {
-      title: 'Headless WordPress',
-      description: 'Headless WordPress site built with Next.js and WPGraphQL',
-      tech: ['Next.js', 'WordPress', 'GraphQL'],
-      github: 'https://github.com',
+      title: 'Python Basics and Physics',
+      description: 'Implementation of various numerical methods to solve nonlinear equations',
+      tech: ['Python', 'Matplotlib'],
+      github: 'https://github.com/BeastAnniee/python-basics-and-physics',
       external: '/demo'
     },
     {
-      title: 'Personal Website v1',
-      description: 'First iteration of my personal website built with Jekyll',
-      tech: ['Jekyll', 'Sass', 'JavaScript'],
-      github: 'https://github.com',
+      title: 'Fortran Basics and Physics',
+      description: 'A set of beginner and intermediate Fortran programs',
+      tech: ['Fortran'],
+      github: 'https://github.com/BeastAnniee/fortran-basics-and-physics',
       external: '/demo'
     }
   ];
@@ -190,11 +190,16 @@ const Projects = () => {
             <div className="md:hidden space-y-4">
               {/* Project Image - Mobile */}
               <div className="relative group">
-                <div className="bg-[#64ffda]/20 aspect-video rounded border border-[#64ffda]/30 overflow-hidden">
-                  <div className="w-full h-full bg-gradient-to-br from-[#64ffda]/10 to-[#64ffda]/5 flex items-center justify-center">
-                    <span className="text-[#64ffda] font-mono">Project Image</span>
-                  </div>
-                  <div className="absolute inset-0 bg-[#0a192f]/80 group-hover:bg-transparent transition-all duration-300"></div>
+                <div className="bg-[#64ffda]/20 aspect-video rounded border border-[#64ffda]/30 overflow-hidden relative">
+                  <Image
+                    src={project.image}
+                    alt={project.title + ' preview'}
+                    fill
+                    className="object-cover w-full h-full"
+                    sizes="100vw"
+                    priority={index === 0}
+                  />
+                  <div className="absolute inset-0 bg-[#0a192f]/20 group-hover:bg-transparent transition-all duration-300"></div>
                 </div>
               </div>
 

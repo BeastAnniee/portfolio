@@ -70,6 +70,28 @@ const About = () => {
                 </span>
               ))}
             </div>
+
+            {/* Mobile Action Buttons (visible on mobile only) */}
+            <div className="flex flex-col gap-3 mt-6 w-full md:hidden">
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 border border-[#64ffda] text-[#64ffda] font-mono text-sm rounded hover:bg-[#64ffda]/10 transition-all duration-300 text-center shadow-md"
+                title="Open Resume in new tab"
+              >
+                View Resume
+              </a>
+              <a
+                href="/story.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 border border-[#233554] text-[#8892b0] font-mono text-sm rounded hover:bg-[#233554]/60 hover:text-[#64ffda] transition-all duration-300 text-center shadow-none"
+                title="Open Cover Letter in new tab"
+              >
+                View more of me
+              </a>
+            </div>
           </motion.div>
 
           {/* Profile Image */}

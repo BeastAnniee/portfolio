@@ -20,7 +20,7 @@ const Footer = () => {
     },
     {
       name: 'LinkedIn',
-      url: 'https://www.linkedin.com/in/jostin-aldair-nava-l%C3%B3pez-437986320/',
+      url: 'https://www.linkedin.com/in/aldair-nava-dev',
       icon: Linkedin
     },
     {
