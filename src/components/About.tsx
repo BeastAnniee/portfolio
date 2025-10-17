@@ -5,21 +5,18 @@ import Image from 'next/image';
 
 const About = () => {
   const technologies = [
-    'JavaScript (ES6+)',
-    'TypeScript',
-    'React',
-    'Next.js',
-    'React Router 7',
-    'Material UI',
-    'Tailwind CSS',
-    'MySQL',
-    'Node.js',
-    'Express',
     'Python',
     'Fortran',
     'Pandas',
     'NumPy',
-    'Scikit-learn',
+    'Scikit-learn','JavaScript (ES6+)',
+    'TypeScript',
+    'React',
+    'Next.js',
+    'React Router 7',
+    'MySQL',
+    'Node.js',
+,
   ];
 
   return (
@@ -49,20 +46,21 @@ const About = () => {
           >
             <div className="flex flex-col max-w-xl space-y-5">
               <p className="text-[#8892b0] text-lg leading-relaxed">
-                Hi, I&apos;m Aldair Nava, a junior software developer based in Monterrey, Nuevo León.
-              </p>
-              <p className="text-[#8892b0] text-lg leading-relaxed">
-                I come from a STEAM background and specialize in frontend development using React, TypeScript, and Next.js. I also work with Python for scripting, automation, and data-driven solutions.
-              </p>
-              <p className="text-[#8892b0] text-lg leading-relaxed">
-                I&apos;m passionate about creating digital products that are accessible, meaningful, and built with purpose — whether that means solving real problems, making information easier to understand, or helping others learn through technology.
+                My professional trajectory is intentionally interdisciplinary. As a Physics Student 
+                and Mechatronics Technician, my value lies not just in what I can code, but in how I 
+                approach problems. I specialize in applying a quantitative analysis mindset—utilizing 
+                Python, Fortran, and numerical methods—to break down complex challenges and translate 
+                them into computational models. Web development is my primary delivery vehicle: I use 
+                frameworks like React and Next.js to build robust, intuitive tools that make automated 
+                and data-driven solutions accessible, ensuring scientific knowledge translates into 
+                real-world impact.
               </p>
               <p className="text-[#8892b0] text-lg leading-relaxed">
                 Here are a few technologies I&apos;ve been working with recently:
               </p>
             </div>
 
-            {/* Technologies Grid */}
+            {/* Technologies Grid*/}
             <div className="grid grid-cols-3 gap-2 mt-6">
               {technologies.map((tech, index) => (
                 <span key={index} className="text-[#8892b0] text-base flex items-center">
@@ -89,7 +87,7 @@ const About = () => {
                 className="px-4 py-2 border border-[#233554] text-[#8892b0] font-mono text-sm rounded hover:bg-[#233554]/60 hover:text-[#64ffda] transition-all duration-300 text-center shadow-none"
                 title="Open Cover Letter in new tab"
               >
-                View more of me
+                More of me
               </a>
             </div>
           </motion.div>

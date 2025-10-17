@@ -64,7 +64,7 @@ const Hero = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-[#8892b0] mb-6 leading-tight"
           >
-            Coding with purpose.
+            Software Developer.
           </motion.h2>
           
           {/* Description */}
@@ -74,9 +74,11 @@ const Hero = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-[#8892b0] text-lg max-w-2xl mb-12 leading-relaxed"
           >
-            Junior software developer focused on accesible digital products. 
-            Specialized in frontend development with React, Typescript and Next.js.
-            Also experienced in Python for scripting, automation, and data solutions.
+            Scientific Programmer & Junior Data Analyst. My focus is on quantitative 
+            analysis and solving complex, interdisciplinary challenges using scientific 
+            programming and numerical methods. I leverage React and Next.js as key 
+            tools to build accessible web visualizations, dashboards, 
+            and automation solutions.
           </motion.p>
           
           {/* CTA Button */}
