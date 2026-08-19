@@ -5,6 +5,9 @@ import { useState } from 'react';
 import { Send } from 'lucide-react';
 import emailjs from 'emailjs-com';
 
+const inputClass =
+  'w-full rounded-[14px] bg-bento-page px-4 py-3 text-bento-black placeholder-bento-graphite/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-purple transition-shadow duration-200';
+
 const Contact = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -46,7 +49,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3500);
     setFormData({ name: '', email: '', subject: '', message: '' });
-  } catch (_) {
+  } catch {
     setShowError(true);
     setTimeout(() => setShowError(false), 3500);
   } finally {
@@ -55,54 +58,43 @@ const handleSubmit = async (e: React.FormEvent) => {
 };
 
   return (
-    <section id="contact" className="py-24 px-6 lg:px-8 bg-[#0a192f]">
-      <div className="max-w-2xl mx-auto">
-        {/* Toast de éxito */}
-        {showSuccess && (
-          <div className="fixed top-8 left-1/2 transform -translate-x-1/2 bg-[#233554] text-[#64ffda] px-6 py-3 rounded shadow-lg font-sans text-base z-50 animate-fade-in">
-            ¡Tu mensaje fue enviado exitosamente! Pronto me pondré en contacto contigo.
-          </div>
-        )}
-        {/* Toast de error */}
-        {showError && (
-          <div className="fixed top-8 left-1/2 transform -translate-x-1/2 bg-[#ff4d4f] text-white px-6 py-3 rounded shadow-lg font-sans text-base z-50 animate-fade-in">
-            Ocurrió un error al enviar tu mensaje. Intenta de nuevo más tarde.
-          </div>
-        )}
+    <section id="contact" className="px-4 py-6 sm:px-6 lg:px-10">
+      {/* Toast de éxito */}
+      {showSuccess && (
+        <div className="fixed top-8 left-1/2 z-50 -translate-x-1/2 rounded-full bg-bento-mint px-6 py-3 text-sm font-medium text-bento-black animate-fade-in">
+          Your message was sent successfully! I&apos;ll get back to you soon.
+        </div>
+      )}
+      {/* Toast de error */}
+      {showError && (
+        <div className="fixed top-8 left-1/2 z-50 -translate-x-1/2 rounded-full bg-bento-amber px-6 py-3 text-sm font-medium text-bento-black animate-fade-in">
+          Something went wrong sending your message. Please try again later.
+        </div>
+      )}
 
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <span className="text-[#64ffda] font-mono text-base block mb-4">03. What&apos;s Next?</span>
-          <h2 className="text-4xl sm:text-5xl font-bold text-[#ccd6f6] mb-6">Get In Touch</h2>
-          <p className="text-[#8892b0] text-lg leading-relaxed max-w-lg mx-auto">
-            I&apos;m always open to discussing new opportunities, collaborations, or just having a chat about technology. Drop me a message!
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true }}
+        className="mx-auto max-w-2xl rounded-[24px] bg-bento-page/40 p-6 sm:p-8"
+      >
+        <div className="mb-10 text-center">
+          <span className="mb-3 inline-block rounded-full bg-bento-page px-4 py-1.5 text-sm font-semibold text-bento-black">
+            Get In Touch
+          </span>
+          <h2 className="mb-4 font-display text-3xl font-extrabold text-bento-black sm:text-4xl">
+            Let&apos;s work together
+          </h2>
+          <p className="mx-auto max-w-lg leading-relaxed text-bento-graphite">
+            I&apos;m always open to discussing new opportunities, collaborations, or just having a chat about data and automation. Drop me a message!
           </p>
-        </motion.div>
+        </div>
 
-        {/* Contact Form */}
-        <motion.form
-          onSubmit={handleSubmit}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="space-y-6"
-        >
-          {/* Name and Email Row */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              <label htmlFor="name" className="block text-[#ccd6f6] font-mono text-sm mb-2">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="grid gap-5 md:grid-cols-2">
+            <div>
+              <label htmlFor="name" className="mb-2 block text-sm font-semibold text-bento-black">
                 Name
               </label>
               <input
@@ -112,18 +104,13 @@ const handleSubmit = async (e: React.FormEvent) => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-[#112240] border border-[#233554] rounded text-[#ccd6f6] placeholder-[#8892b0] focus:border-[#64ffda] focus:outline-none transition-colors duration-300"
+                className={inputClass}
                 placeholder="Your Name"
               />
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              viewport={{ once: true }}
-            >
-              <label htmlFor="email" className="block text-[#ccd6f6] font-mono text-sm mb-2">
+            </div>
+
+            <div>
+              <label htmlFor="email" className="mb-2 block text-sm font-semibold text-bento-black">
                 Email
               </label>
               <input
@@ -133,20 +120,14 @@ const handleSubmit = async (e: React.FormEvent) => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-[#112240] border border-[#233554] rounded text-[#ccd6f6] placeholder-[#8892b0] focus:border-[#64ffda] focus:outline-none transition-colors duration-300"
+                className={inputClass}
                 placeholder="your.email@example.com"
               />
-            </motion.div>
+            </div>
           </div>
 
-          {/* Subject */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <label htmlFor="subject" className="block text-[#ccd6f6] font-mono text-sm mb-2">
+          <div>
+            <label htmlFor="subject" className="mb-2 block text-sm font-semibold text-bento-black">
               Subject
             </label>
             <input
@@ -156,19 +137,13 @@ const handleSubmit = async (e: React.FormEvent) => {
               value={formData.subject}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 bg-[#112240] border border-[#233554] rounded text-[#ccd6f6] placeholder-[#8892b0] focus:border-[#64ffda] focus:outline-none transition-colors duration-300"
+              className={inputClass}
               placeholder="What's this about?"
             />
-          </motion.div>
+          </div>
 
-          {/* Message */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <label htmlFor="message" className="block text-[#ccd6f6] font-mono text-sm mb-2">
+          <div>
+            <label htmlFor="message" className="mb-2 block text-sm font-semibold text-bento-black">
               Message
             </label>
             <textarea
@@ -178,41 +153,34 @@ const handleSubmit = async (e: React.FormEvent) => {
               onChange={handleChange}
               required
               rows={6}
-              className="w-full px-4 py-3 bg-[#112240] border border-[#233554] rounded text-[#ccd6f6] placeholder-[#8892b0] focus:border-[#64ffda] focus:outline-none transition-colors duration-300 resize-vertical"
+              className={`${inputClass} resize-vertical`}
               placeholder="Tell me about your project, idea, or just say hello!"
             />
-          </motion.div>
+          </div>
 
-          {/* Submit Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            viewport={{ once: true }}
-            className="text-center pt-4"
-          >
+          <div className="pt-2 text-center">
             <motion.button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-[#64ffda] text-[#0a192f] font-mono text-sm rounded hover:bg-[#64ffda]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-              whileHover={{ scale: isSubmitting ? 1 : 1.05, y: isSubmitting ? 0 : -2 }}
-              whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
+              whileHover={{ scale: isSubmitting ? 1 : 1.04 }}
+              whileTap={{ scale: isSubmitting ? 1 : 0.97 }}
+              className="inline-flex items-center gap-2 rounded-full bg-bento-purple px-8 py-4 text-sm font-semibold text-bento-black transition-opacity disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-black focus-visible:ring-offset-2 focus-visible:ring-offset-bento-container"
             >
               {isSubmitting ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-[#0a192f] border-t-transparent rounded-full animate-spin" />
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-bento-black border-t-transparent" />
                   <span>Sending...</span>
                 </>
               ) : (
                 <>
-                  <Send className="w-4 h-4" />
+                  <Send className="h-4 w-4" />
                   <span>Send Message</span>
                 </>
               )}
             </motion.button>
-          </motion.div>
-        </motion.form>
-      </div>
+          </div>
+        </form>
+      </motion.div>
     </section>
   );
 };

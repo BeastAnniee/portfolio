@@ -1,8 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, Heart } from 'lucide-react';
-
+import { Github, Linkedin, Mail } from 'lucide-react';
 import { useState } from 'react';
 
 const Footer = () => {
@@ -11,110 +10,57 @@ const Footer = () => {
     navigator.clipboard.writeText('jostinaval@gmail.com');
     setShowCopied(true);
     setTimeout(() => setShowCopied(false), 2500);
-  }
+  };
+
   const socialLinks = [
-    {
-      name: 'GitHub',
-      url: 'https://github.com/BeastAnniee',
-      icon: Github
-    },
-    {
-      name: 'LinkedIn',
-      url: 'https://www.linkedin.com/in/aldair-nava-dev',
-      icon: Linkedin
-    },
-    {
-      name: 'Email',
-      url: '', // Se reemplazará el comportamiento por onClick
-      icon: Mail,
-      isEmail: true
-    }
+    { name: 'GitHub', url: 'https://github.com/BeastAnniee', icon: Github },
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/aldair-nava-dev', icon: Linkedin },
+    { name: 'Email', url: '', icon: Mail, isEmail: true },
   ];
 
   return (
-    <footer className="py-16 px-6 lg:px-8 bg-[#0a192f]">
-      <div className="max-w-4xl mx-auto">
-        {/* Social Links - Mobile Only */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="flex justify-center gap-8 mb-8 lg:hidden"
-        >
+    <footer className="px-4 py-10 sm:px-6 lg:px-10">
+      <div className="flex flex-col items-center gap-6">
+        <div className="flex items-center gap-3">
           {socialLinks.map((link) => {
-  const Icon = link.icon;
-  if (link.isEmail) {
-    return (
-      <motion.button
-        key={link.name}
-        onClick={handleCopyEmail}
-        className="text-[#8892b0] hover:text-[#64ffda] hover:-translate-y-1 transition-all duration-300 focus:outline-none"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        aria-label="Copiar correo electrónico"
-      >
-        <Icon className="w-6 h-6" />
-      </motion.button>
-    );
-  }
-  return (
-    <motion.a
-      key={link.name}
-      href={link.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-[#8892b0] hover:text-[#64ffda] hover:-translate-y-1 transition-all duration-300"
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      <Icon className="w-6 h-6" />
-    </motion.a>
-  );
-})}
-        </motion.div>
+            const Icon = link.icon;
+            if (link.isEmail) {
+              return (
+                <motion.button
+                  key={link.name}
+                  onClick={handleCopyEmail}
+                  aria-label="Copy email address"
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-bento-page text-bento-black transition-colors hover:bg-bento-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-purple focus-visible:ring-offset-2 focus-visible:ring-offset-bento-container"
+                >
+                  <Icon className="h-4 w-4" />
+                </motion.button>
+              );
+            }
+            return (
+              <motion.a
+                key={link.name}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={link.name}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-bento-page text-bento-black transition-colors hover:bg-bento-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-purple focus-visible:ring-offset-2 focus-visible:ring-offset-bento-container"
+              >
+                <Icon className="h-4 w-4" />
+              </motion.a>
+            );
+          })}
+        </div>
 
-        {/* Footer Text */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="text-center"
-        >
-          <p className="text-[#8892b0] font-mono text-sm mb-2">
-            Designed & Built by Aldair Nava
-          </p>
-          
-          <motion.div
-            className="flex items-center justify-center gap-1 text-[#8892b0] text-xs"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            <span>Made with</span>
-            <motion.div
-              animate={{ 
-                scale: [1, 1.2, 1]
-              }}
-              transition={{ 
-                duration: 2, 
-                repeat: Infinity, 
-                ease: 'easeInOut' 
-              }}
-              className="text-[#64ffda]"
-            >
-              <Heart className="w-3 h-3 fill-current" />
-            </motion.div>
-            <span>and lots of coffee</span>
-          </motion.div>
-        </motion.div>
+        <p className="text-sm text-bento-graphite">Designed &amp; built by Aldair Nava</p>
       </div>
-      {/* Toast Copiado */}
+
       {showCopied && (
-        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-[#233554] text-[#64ffda] px-6 py-3 rounded shadow-lg font-sans text-base z-50 animate-fade-in">
-          ¡Correo copiado al portapapeles!
+        <div className="fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full bg-bento-black px-6 py-3 text-sm font-medium text-bento-container animate-fade-in">
+          Email copied to clipboard!
         </div>
       )}
     </footer>
