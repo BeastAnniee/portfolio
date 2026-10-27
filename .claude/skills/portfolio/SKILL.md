@@ -31,9 +31,9 @@ sesión sin decirlo primero.
 - Si un dato cuantitativo no está en `positioning.md` (ej. "¿cuántos registros procesa el ETL?"),
   NO lo inventes — pon un placeholder visible tipo `[CONFIRMAR: volumen del ETL]` y pregúntale a
   Jostin, o dilo explícitamente en la respuesta.
-- El título/pitch principal es **Data Analyst / Automation / BI con capacidad full-stack** — no
-  "Scientific Programmer" ni física como eje central. Física/mecatrónica van en "background", no
-  en el hero.
+- El título/pitch principal es **Software Engineer con enfoque en datos y automatización** — no
+  "Scientific Programmer" ni "Data Analyst" como título, ni física como eje central.
+  Física/mecatrónica van en "background", no en el hero.
 - El voluntariado (FIRST Robotics) nunca se mezcla con experiencia profesional — sección aparte
   si aparece.
 

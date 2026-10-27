@@ -1,186 +1,197 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Send } from 'lucide-react';
 import emailjs from 'emailjs-com';
+import type { Dictionary } from '@/content/types.ts';
+import {
+  TIMEOUT_MS,
+  readEmailConfig,
+  sendContact,
+  validateContact,
+  type ContactData,
+  type ContactError,
+  type ContactField,
+} from '@/lib/contact.ts';
+import SectionHeading from './SectionHeading';
+
+interface ContactProps {
+  copy: Dictionary['contact'];
+  email: string;
+}
+
+type Status = 'idle' | 'sending' | 'success' | 'error';
 
 const inputClass =
-  'w-full rounded-[14px] bg-bento-page px-4 py-3 text-bento-black placeholder-bento-graphite/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-purple transition-shadow duration-200';
+  'w-full rounded-[14px] bg-bento-page px-4 py-3 text-bento-black placeholder-bento-graphite focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-purple transition-shadow duration-200';
 
-const Contact = () => {
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showError, setShowError] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+const emptyData: ContactData = { name: '', email: '', subject: '', message: '' };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+const Contact = ({ copy, email }: ContactProps) => {
+  const [data, setData] = useState<ContactData>(emptyData);
+  const [errors, setErrors] = useState<Partial<Record<ContactField, ContactError>>>({});
+  const [status, setStatus] = useState<Status>('idle');
+  const fieldRefs = useRef<Partial<Record<ContactField, HTMLInputElement | HTMLTextAreaElement | null>>>({});
+  const failureRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (status === 'error') failureRef.current?.focus();
+  }, [status]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const field = event.target.name as ContactField;
+    setData((current) => ({ ...current, [field]: event.target.value }));
   };
 
-const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
-const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!;
-const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (status === 'sending') return;
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+    const result = validateContact(data);
+    setErrors(result.errors);
+    if (result.firstInvalid) {
+      setStatus('idle');
+      fieldRefs.current[result.firstInvalid]?.focus();
+      return;
+    }
 
-  try {
-    await emailjs.send(
-      EMAILJS_SERVICE_ID,
-      EMAILJS_TEMPLATE_ID,
-      {
-        name: formData.name,
-        email: formData.email,
-        subject: formData.subject,
-        message: formData.message,
-      },
-      EMAILJS_PUBLIC_KEY
+    setStatus('sending');
+    // Acceso literal: Next solo sustituye process.env.NEXT_PUBLIC_X escrito tal cual.
+    const config = readEmailConfig({
+      service: process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+      template: process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+      key: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
+    });
+    const outcome = await sendContact({
+      send: (cfg, payload) =>
+        emailjs.send(cfg.serviceId, cfg.templateId, { ...payload }, cfg.publicKey),
+      config,
+      data,
+      timeoutMs: TIMEOUT_MS,
+    });
+
+    if (outcome.ok) {
+      setData(emptyData);
+      setStatus('success');
+    } else {
+      setStatus('error');
+    }
+  };
+
+  const errorText = (field: ContactField): string | undefined => {
+    const error = errors[field];
+    if (!error) return undefined;
+    return error === 'required' ? copy.errors.required : copy.errors.invalidEmail;
+  };
+
+  const renderField = (field: ContactField, type: 'text' | 'email' | 'textarea') => {
+    const message = errorText(field);
+    const common = {
+      id: `contact-${field}`,
+      name: field,
+      value: data[field],
+      onChange: handleChange,
+      'aria-invalid': message ? true : undefined,
+      'aria-describedby': message ? `contact-${field}-error` : undefined,
+      placeholder: copy.placeholders[field],
+      className: type === 'textarea' ? `${inputClass} resize-y` : inputClass,
+    };
+    return (
+      <div key={field}>
+        <label htmlFor={common.id} className="mb-2 block text-sm font-semibold text-bento-black">
+          {copy.labels[field]}
+        </label>
+        {type === 'textarea' ? (
+          <textarea
+            {...common}
+            rows={6}
+            ref={(node) => {
+              fieldRefs.current[field] = node;
+            }}
+          />
+        ) : (
+          <input
+            {...common}
+            type={type}
+            autoComplete={field === 'name' ? 'name' : field === 'email' ? 'email' : 'off'}
+            ref={(node) => {
+              fieldRefs.current[field] = node;
+            }}
+          />
+        )}
+        {message && (
+          <p id={`contact-${field}-error`} className="mt-2 text-sm font-medium text-bento-black underline decoration-bento-amber decoration-2 underline-offset-4">
+            {message}
+          </p>
+        )}
+      </div>
     );
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3500);
-    setFormData({ name: '', email: '', subject: '', message: '' });
-  } catch {
-    setShowError(true);
-    setTimeout(() => setShowError(false), 3500);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   return (
-    <section id="contact" className="px-4 py-6 sm:px-6 lg:px-10">
-      {/* Toast de éxito */}
-      {showSuccess && (
-        <div className="fixed top-8 left-1/2 z-50 -translate-x-1/2 rounded-full bg-bento-mint px-6 py-3 text-sm font-medium text-bento-black animate-fade-in">
-          Your message was sent successfully! I&apos;ll get back to you soon.
-        </div>
-      )}
-      {/* Toast de error */}
-      {showError && (
-        <div className="fixed top-8 left-1/2 z-50 -translate-x-1/2 rounded-full bg-bento-amber px-6 py-3 text-sm font-medium text-bento-black animate-fade-in">
-          Something went wrong sending your message. Please try again later.
-        </div>
-      )}
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        viewport={{ once: true }}
-        className="mx-auto max-w-2xl rounded-[24px] bg-bento-page/40 p-6 sm:p-8"
-      >
+    <section id="contact" aria-labelledby="contact-title" className="px-4 py-6 sm:px-6 lg:px-10">
+      <div className="mx-auto max-w-2xl rounded-[24px] bg-bento-page/40 p-6 sm:p-8">
         <div className="mb-10 text-center">
-          <span className="mb-3 inline-block rounded-full bg-bento-page px-4 py-1.5 text-sm font-semibold text-bento-black">
-            Get In Touch
-          </span>
-          <h2 className="mb-4 font-display text-3xl font-extrabold text-bento-black sm:text-4xl">
-            Let&apos;s work together
-          </h2>
-          <p className="mx-auto max-w-lg leading-relaxed text-bento-graphite">
-            I&apos;m always open to discussing new opportunities, collaborations, or just having a chat about data and automation. Drop me a message!
-          </p>
+          <SectionHeading id="contact-title">{copy.badge}</SectionHeading>
+          <p className="mb-4 font-display text-3xl font-extrabold text-bento-black sm:text-4xl">{copy.title}</p>
+          <p className="mx-auto max-w-lg leading-relaxed text-bento-graphite">{copy.intro}</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} noValidate className="space-y-5">
           <div className="grid gap-5 md:grid-cols-2">
-            <div>
-              <label htmlFor="name" className="mb-2 block text-sm font-semibold text-bento-black">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                className={inputClass}
-                placeholder="Your Name"
-              />
+            {renderField('name', 'text')}
+            {renderField('email', 'email')}
+          </div>
+          {renderField('subject', 'text')}
+          {renderField('message', 'textarea')}
+
+          <div aria-live="polite">
+            {status === 'sending' && (
+              <p role="status" className="rounded-[14px] bg-bento-page px-4 py-3 text-sm font-medium text-bento-black">
+                {copy.sending}
+              </p>
+            )}
+            {status === 'success' && (
+              <p role="status" className="rounded-[14px] bg-bento-mint px-4 py-3 text-sm font-medium text-bento-black">
+                {copy.success}
+              </p>
+            )}
+          </div>
+          {status === 'error' && (
+            <div
+              ref={failureRef}
+              tabIndex={-1}
+              role="alert"
+              className="rounded-[14px] bg-bento-amber px-4 py-3 text-sm font-medium text-bento-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-black"
+            >
+              {copy.failure}{' '}
+              <a href={`mailto:${email}`} className="font-semibold underline underline-offset-4">
+                {email}
+              </a>
             </div>
-
-            <div>
-              <label htmlFor="email" className="mb-2 block text-sm font-semibold text-bento-black">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className={inputClass}
-                placeholder="your.email@example.com"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="subject" className="mb-2 block text-sm font-semibold text-bento-black">
-              Subject
-            </label>
-            <input
-              type="text"
-              id="subject"
-              name="subject"
-              value={formData.subject}
-              onChange={handleChange}
-              required
-              className={inputClass}
-              placeholder="What's this about?"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="message" className="mb-2 block text-sm font-semibold text-bento-black">
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              required
-              rows={6}
-              className={`${inputClass} resize-vertical`}
-              placeholder="Tell me about your project, idea, or just say hello!"
-            />
-          </div>
+          )}
 
           <div className="pt-2 text-center">
-            <motion.button
+            <button
               type="submit"
-              disabled={isSubmitting}
-              whileHover={{ scale: isSubmitting ? 1 : 1.04 }}
-              whileTap={{ scale: isSubmitting ? 1 : 0.97 }}
-              className="inline-flex items-center gap-2 rounded-full bg-bento-purple px-8 py-4 text-sm font-semibold text-bento-black transition-opacity disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-black focus-visible:ring-offset-2 focus-visible:ring-offset-bento-container"
+              disabled={status === 'sending'}
+              className="inline-flex min-h-11 items-center gap-2 rounded-full bg-bento-purple px-8 py-4 text-sm font-semibold text-bento-black transition-opacity disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-black focus-visible:ring-offset-2 focus-visible:ring-offset-bento-container"
             >
-              {isSubmitting ? (
+              {status === 'sending' ? (
                 <>
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-bento-black border-t-transparent" />
-                  <span>Sending...</span>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-bento-black border-t-transparent" aria-hidden="true" />
+                  <span>{copy.sending}</span>
                 </>
               ) : (
                 <>
-                  <Send className="h-4 w-4" />
-                  <span>Send Message</span>
+                  <Send className="h-4 w-4" aria-hidden="true" />
+                  <span>{copy.submit}</span>
                 </>
               )}
-            </motion.button>
+            </button>
           </div>
         </form>
-      </motion.div>
+      </div>
     </section>
   );
 };

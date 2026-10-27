@@ -87,3 +87,8 @@
 .animate-spin-slow {
   animation: spin-slow 16s linear infinite;
 }
+
+/* Las anclas de sección quedan bajo el encabezado fijo */
+section[id] {
+  scroll-margin-top: 5rem;
+}

@@ -1,21 +1,23 @@
-'use client';
+import { Github, Linkedin } from 'lucide-react';
+import CopyEmailButton from './CopyEmailButton';
+import type { Dictionary } from '@/content/types.ts';
 
-import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail } from 'lucide-react';
-import { useState } from 'react';
+interface FooterProps {
+  email: string;
+  github: string;
+  linkedin: string;
+  hero: Dictionary['hero'];
+  common: Dictionary['common'];
+  footer: Dictionary['footer'];
+}
 
-const Footer = () => {
-  const [showCopied, setShowCopied] = useState(false);
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText('jostinaval@gmail.com');
-    setShowCopied(true);
-    setTimeout(() => setShowCopied(false), 2500);
-  };
+const linkClass =
+  'flex h-11 w-11 items-center justify-center rounded-full bg-bento-page text-bento-black transition-colors hover:bg-bento-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-purple focus-visible:ring-offset-2 focus-visible:ring-offset-bento-container';
 
+const Footer = ({ email, github, linkedin, hero, common, footer }: FooterProps) => {
   const socialLinks = [
-    { name: 'GitHub', url: 'https://github.com/BeastAnniee', icon: Github },
-    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/aldair-nava-dev', icon: Linkedin },
-    { name: 'Email', url: '', icon: Mail, isEmail: true },
+    { name: hero.github, url: github, icon: Github },
+    { name: hero.linkedin, url: linkedin, icon: Linkedin },
   ];
 
   return (
@@ -24,45 +26,24 @@ const Footer = () => {
         <div className="flex items-center gap-3">
           {socialLinks.map((link) => {
             const Icon = link.icon;
-            if (link.isEmail) {
-              return (
-                <motion.button
-                  key={link.name}
-                  onClick={handleCopyEmail}
-                  aria-label="Copy email address"
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-bento-page text-bento-black transition-colors hover:bg-bento-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-purple focus-visible:ring-offset-2 focus-visible:ring-offset-bento-container"
-                >
-                  <Icon className="h-4 w-4" />
-                </motion.button>
-              );
-            }
             return (
-              <motion.a
+              <a
                 key={link.name}
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={link.name}
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-bento-page text-bento-black transition-colors hover:bg-bento-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-purple focus-visible:ring-offset-2 focus-visible:ring-offset-bento-container"
+                className={linkClass}
               >
-                <Icon className="h-4 w-4" />
-              </motion.a>
+                <Icon className="h-4 w-4" aria-hidden="true" />
+              </a>
             );
           })}
+          <CopyEmailButton email={email} label={common.copyEmail} copiedText={common.emailCopied} />
         </div>
 
-        <p className="text-sm text-bento-graphite">Designed &amp; built by Aldair Nava</p>
+        <p className="text-sm text-bento-graphite">{footer.builtBy}</p>
       </div>
-
-      {showCopied && (
-        <div className="fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full bg-bento-black px-6 py-3 text-sm font-medium text-bento-container animate-fade-in">
-          Email copied to clipboard!
-        </div>
-      )}
     </footer>
   );
 };
