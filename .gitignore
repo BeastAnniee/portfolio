@@ -39,3 +39,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# >>> tech-consultant
+.tc/last-verify.json
+.claude/settings.local.json
+*.tc-new
+node_modules/
+dist/
+.taste-skill/
+.tc/design-check.json
+# <<< tech-consultant
+
+# IDE
+.idea/
