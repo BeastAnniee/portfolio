@@ -3,9 +3,10 @@
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 
-const SignatureBadge = () => {
-  const text = 'AVAILABLE FOR WORK • AVAILABLE FOR WORK • ';
+// Perímetro del círculo (2π·42 ≈ 263,9) menos holgura: el texto, sea cual sea el idioma, se ajusta al anillo.
+const BADGE_PATH_LENGTH = 263;
 
+const SignatureBadge =({ text }: { text: string }) => {
   return (
     <div className="relative h-28 w-28 shrink-0" aria-hidden="true">
       <motion.div
@@ -18,7 +19,7 @@ const SignatureBadge = () => {
             <path id="badge-circle-path" d="M 50,50 m -42,0 a 42,42 0 1,1 84,0 a 42,42 0 1,1 -84,0" />
           </defs>
           <text fontSize="7.4" fontWeight={700} letterSpacing="1.5" fill="#000000" className="font-display">
-            <textPath href="#badge-circle-path" startOffset="0%">
+            <textPath href="#badge-circle-path" startOffset="0%" textLength={BADGE_PATH_LENGTH} lengthAdjust="spacing">
               {text}
             </textPath>
           </text>
