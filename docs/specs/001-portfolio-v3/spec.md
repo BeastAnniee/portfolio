@@ -3,7 +3,7 @@ type: spec
 id: 001
 title: Portafolio v3 — capa de contenido bilingüe y nueva arquitectura de información
 aliases: ["001 · Portafolio v3 contenido bilingüe + IA"]
-status: validated
+status: in-review
 risk: R2
 created: 2026-10-27
 owner: Jostin Aldair Nava
