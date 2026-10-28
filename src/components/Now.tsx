@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Clock } from 'lucide-react';
 import type { Dictionary } from '@/content/types.ts';
 import type { Locale } from '@/lib/locale.ts';
 import { nowStatus } from '@/lib/now-status.ts';
@@ -40,23 +40,26 @@ const Now = ({ locale, updatedAt, cards, copy }: NowProps) => {
   const label = fresh ? copy.updated : copy.lastUpdated;
 
   return (
-    <section id="now" aria-labelledby="now-title" className="px-4 py-6 sm:px-6 lg:px-10">
+    <section id="now" aria-labelledby="now-title" className="@container py-10">
       <SectionHeading id="now-title">{copy.title}</SectionHeading>
-      <p className="mb-4 text-sm font-medium text-bento-graphite">
-        {label}: <time dateTime={updatedAt}>{date}</time>
+      <p className="mb-6 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.12em] text-bone-2">
+        {!fresh && <Clock className="h-4 w-4 shrink-0" aria-hidden="true" />}
+        <span>
+          {label}: <time dateTime={updatedAt}>{date}</time>
+        </span>
       </p>
 
-      <ul className="grid gap-4 sm:grid-cols-2 sm:gap-6">
+      <ul className="grid gap-4 @2xl:grid-cols-2">
         {cards.map((card) => (
-          <li key={card.id} className="min-w-0 rounded-[20px] bg-bento-lilac p-5 sm:p-6">
-            <h3 className="mb-2 font-display text-lg font-bold text-bento-black">{card.title}</h3>
-            <p className="break-words text-sm leading-relaxed text-bento-black">{card.body}</p>
+          <li key={card.id} className="min-w-0 rounded-xl border border-line bg-carbon-2 p-5 @2xl:p-6">
+            <h3 className="mb-2 break-words font-display text-2xl uppercase text-bone">{card.title}</h3>
+            <p className="break-words text-base text-bone">{card.body}</p>
             {card.href && card.link && (
               <a
                 href={card.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 inline-flex min-h-11 items-center gap-1 rounded-full text-sm font-semibold text-bento-black underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-black focus-visible:ring-offset-2 focus-visible:ring-offset-bento-lilac"
+                className="mt-4 inline-flex min-h-11 items-center gap-1 rounded-lg font-semibold text-accent underline underline-offset-4 hover:text-bone"
               >
                 {card.link}
                 <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
@@ -66,7 +69,7 @@ const Now = ({ locale, updatedAt, cards, copy }: NowProps) => {
         ))}
       </ul>
 
-      <p className="mt-4 text-sm text-bento-black">
+      <p className="mt-6 max-w-[65ch] text-base text-bone">
         <span className="font-semibold">{copy.openTo.label}: </span>
         {copy.openTo.text}
       </p>

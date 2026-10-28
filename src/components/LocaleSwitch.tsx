@@ -10,7 +10,7 @@ interface LocaleSwitchProps {
 }
 
 const optionClass =
-  'inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-purple focus-visible:ring-offset-2 focus-visible:ring-offset-bento-container';
+  'inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border px-3 font-mono text-xs font-medium uppercase tracking-[0.12em]';
 
 const LocaleSwitch = ({ locale, labels }: LocaleSwitchProps) => (
   <div role="group" aria-label={labels.label} className="flex items-center gap-1">
@@ -22,7 +22,7 @@ const LocaleSwitch = ({ locale, labels }: LocaleSwitchProps) => (
             key={code}
             lang={code}
             aria-current="true"
-            className={`${optionClass} bg-bento-black text-bento-container underline underline-offset-4`}
+            className={`${optionClass} border-accent bg-accent text-carbon underline underline-offset-4`}
           >
             <span aria-hidden="true">{code.toUpperCase()}</span>
             <span className="sr-only">{`${name} (${labels.current})`}</span>
@@ -41,7 +41,7 @@ const LocaleSwitch = ({ locale, labels }: LocaleSwitchProps) => (
             event.preventDefault();
             window.location.assign(switchLocaleHref(locale, window.location.hash));
           }}
-          className={`${optionClass} text-bento-black hover:bg-bento-mint`}
+          className={`${optionClass} border-line text-bone hover:bg-bone hover:text-carbon`}
         >
           {code.toUpperCase()}
         </a>

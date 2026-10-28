@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
+import Marquee from '@/components/Marquee';
 import Now from '@/components/Now';
 import Experience from '@/components/Experience';
 import Projects from '@/components/Projects';
@@ -11,6 +12,7 @@ import Lab from '@/components/Lab';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import { isLocale } from '@/lib/locale.ts';
+import { buildMarqueeItems } from '@/lib/marquee.ts';
 import { getDictionary, SECTION_IDS } from '@/content/index.ts';
 import { facts } from '@/content/facts.ts';
 
@@ -26,7 +28,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   }));
 
   return (
-    <div className="min-h-screen bg-bento-page overflow-x-hidden">
+    <div className="min-h-screen bg-carbon text-bone">
       <Header
         locale={lang}
         nav={dict.nav}
@@ -34,34 +36,38 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         cvHref={facts.cv[lang]}
         sections={SECTION_IDS}
       />
-      <main className="mx-auto max-w-7xl px-3 py-4 sm:px-4 sm:py-6 lg:px-6 lg:py-8">
-        <div className="rounded-[32px] bg-bento-container sm:rounded-[40px] overflow-hidden">
-          <Hero
-            name={facts.profile.name}
-            email={facts.profile.email}
-            github={facts.profile.github}
-            linkedin={facts.profile.linkedin}
-            hero={dict.hero}
-            common={dict.common}
-          />
-          <Now locale={lang} updatedAt={facts.now.updatedAt} cards={nowCards} copy={dict.now} />
-          <Experience copy={dict.experience} techLabels={dict.techLabels} />
-          <Projects copy={dict.projects} techLabels={dict.techLabels} />
-          <Stack copy={dict.stack} techLabels={dict.techLabels} />
-          <Achievements copy={dict.achievements} />
-          <Education copy={dict.education} />
-          <Lab copy={dict.lab} techLabels={dict.techLabels} />
-          <Contact copy={dict.contact} email={facts.profile.email} />
-          <Footer
-            email={facts.profile.email}
-            github={facts.profile.github}
-            linkedin={facts.profile.linkedin}
-            hero={dict.hero}
-            common={dict.common}
-            footer={dict.footer}
-          />
-        </div>
+      <main className="mx-auto w-full max-w-7xl px-4 pt-16 sm:px-6 lg:px-10">
+        <Hero
+          name={facts.profile.name}
+          email={facts.profile.email}
+          github={facts.profile.github}
+          linkedin={facts.profile.linkedin}
+          hero={dict.hero}
+          common={dict.common}
+        />
+        <Marquee
+          items={buildMarqueeItems(dict, facts)}
+          label={dict.marquee.label}
+          pause={dict.marquee.pause}
+          play={dict.marquee.play}
+        />
+        <Now locale={lang} updatedAt={facts.now.updatedAt} cards={nowCards} copy={dict.now} />
+        <Experience copy={dict.experience} techLabels={dict.techLabels} ficha={dict.ficha.exp} />
+        <Projects copy={dict.projects} techLabels={dict.techLabels} ficha={dict.ficha.proj} />
+        <Stack copy={dict.stack} techLabels={dict.techLabels} />
+        <Achievements copy={dict.achievements} ficha={dict.ficha.ach} />
+        <Education copy={dict.education} ficha={dict.ficha.edu} />
+        <Lab copy={dict.lab} techLabels={dict.techLabels} ficha={dict.ficha.lab} />
+        <Contact copy={dict.contact} email={facts.profile.email} />
       </main>
+      <Footer
+        email={facts.profile.email}
+        github={facts.profile.github}
+        linkedin={facts.profile.linkedin}
+        hero={dict.hero}
+        common={dict.common}
+        footer={dict.footer}
+      />
     </div>
   );
 }

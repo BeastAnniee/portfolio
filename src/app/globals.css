@@ -1,22 +1,32 @@
 @import "tailwindcss";
 
+/* Respaldo de Anton si la fuente web no carga (REQ-19). Impact no existe en Android ni Linux, así que se
+   usa la sans del sistema (Arial/Helvetica/Roboto/Liberation/DejaVu, todas con mayúsculas a ±3 % de Arial)
+   reducida: «ALDAIR» mide 258 px con Anton y 362 con Arial a 100 px; al 66 % queda ≈ 7 % más estrecha que
+   Anton, de modo que el nombre del hero cabe en su marco. */
+@font-face {
+  font-family: 'Anton Fallback';
+  src: local('Arial'), local('Roboto'), local('Liberation Sans'), local('DejaVu Sans'), local('Noto Sans'),
+    local('Helvetica Neue'), local('Helvetica');
+  size-adjust: 66%;
+}
+
 /* =========================
-   BENTO GRID DESIGN TOKENS
-   Fuente de verdad: .claude/skills/portfolio/references/bento-design-spec.md
+   TOKENS
+   Fuente de verdad: docs/specs/002-poster-visual/design.md (§2) y docs/design/DESIGN.md.
 ========================= */
 @theme {
-  --color-bento-page: #E2E2E2;
-  --color-bento-container: #F6F6F6;
-  --color-bento-purple: #8184D2;
-  --color-bento-purple-deep: #8E6FBE;
-  --color-bento-mint: #A9D9D7;
-  --color-bento-amber: #FEC267;
-  --color-bento-graphite: #585858;
-  --color-bento-black: #000000;
-  --color-bento-lilac: #EFAEFF;
 
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --color-carbon: #141414;
+  --color-carbon-2: #1D1D1D;
+  --color-bone: #E9E4D8;
+  --color-bone-2: #A8A398;
+  --color-line: #7A766D;
+  --color-accent: #F29BB0;
+
+  --font-display: var(--font-anton), 'Anton Fallback', sans-serif;
+  --font-body: var(--font-work-sans), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, 'Courier New', monospace;
 }
 
 /* =========================
@@ -28,17 +38,23 @@
   }
 
   body {
-    background: var(--color-bento-page);
-    color: var(--color-bento-black);
+    background: var(--color-carbon);
+    color: var(--color-bone);
     font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.55;
     font-feature-settings: 'rlig' 1, 'calt' 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
+  .font-display {
+    font-synthesis: none;
+  }
+
   ::selection {
-    background: var(--color-bento-purple);
-    color: var(--color-bento-black);
+    background: var(--color-accent);
+    color: var(--color-carbon);
   }
 
   ::-webkit-scrollbar {
@@ -46,30 +62,32 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--color-bento-page);
+    background: var(--color-carbon);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--color-bento-graphite);
+    background: var(--color-line);
     border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-bento-black);
+    background: var(--color-bone-2);
+  }
+
+  /* Foco: outline (sin sombras ni anillos de Tailwind) */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  .inverted :focus-visible {
+    outline-color: var(--color-carbon);
   }
 }
 
-/* Respeta prefers-reduced-motion a nivel global para animaciones CSS puras
-   (las animaciones de Framer Motion se controlan vía <MotionConfig reducedMotion="user">) */
-@media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
+/* =========================
+   MOVIMIENTO (catálogo cerrado: solo transform y opacity)
+========================= */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -79,16 +97,217 @@
   animation: fade-in 0.25s ease-out;
 }
 
-@keyframes spin-slow {
+/* Titulares que suben desde una máscara. El estado base es el final:
+   sin JS ni animación el texto se ve (animation-fill-mode: backwards). */
+@keyframes rise {
+  from { transform: translateY(105%); }
+  to { transform: translateY(0); }
+}
+
+.mask {
+  overflow: hidden;
+  padding: 0.06em 0;
+}
+
+.rise {
+  display: inline-block;
+  vertical-align: top;
+  animation: rise 360ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+/* Filetes que se dibujan: pseudo-elementos con borde real (visibles en forced-colors) */
+@keyframes draw-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes draw-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+.rule-x,
+.rule-y {
+  position: relative;
+}
+
+.rule-x::before,
+.rule-x::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--color-line);
+  transform-origin: left center;
+  animation: draw-x 500ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+
+.rule-x::before {
+  top: 0;
+}
+
+.rule-x::after {
+  bottom: 0;
+}
+
+.rule-y::before,
+.rule-y::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid var(--color-line);
+  transform-origin: center top;
+  animation: draw-y 500ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+
+.rule-y::before {
+  left: 0;
+}
+
+.rule-y::after {
+  right: 0;
+}
+
+/* Botones: el color cambia al instante; solo se anima el press */
+.press {
+  transition: transform 120ms ease-out;
+}
+
+.press:active {
+  transform: scale(0.97);
+}
+
+/* Spinner de envío */
+@keyframes spinner {
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: spinner 900ms linear infinite;
+}
+
+/* Sello */
+@keyframes badge-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-.animate-spin-slow {
-  animation: spin-slow 16s linear infinite;
+.badge-spin {
+  animation: badge-spin 24s linear infinite;
+  transform-box: view-box;
+  transform-origin: 50% 50%;
 }
 
-/* Las anclas de sección quedan bajo el encabezado fijo */
-section[id] {
-  scroll-margin-top: 5rem;
+/* Cinta de créditos */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--dur, 45s) linear infinite;
+}
+
+/* La pausa de la cinta detiene todo el movimiento continuo (WCAG 2.2.2) */
+html[data-motion-paused] .badge-spin,
+html[data-motion-paused] .marquee-track {
+  animation-play-state: paused;
+}
+
+/* =========================
+   IMAGEN EN DUOTONO (carbón + acento) con grano estático
+   Capas, de abajo arriba: imagen a color → saturation → multiply accent → lighten carbon → grano.
+========================= */
+.duo {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--color-carbon-2);
+}
+
+.duo-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease-out;
+}
+
+.duo-sat {
+  background: var(--color-carbon-2);
+  mix-blend-mode: saturation;
+}
+
+.duo-mul {
+  background: var(--color-accent);
+  mix-blend-mode: multiply;
+}
+
+.duo-lift {
+  background: var(--color-carbon);
+  mix-blend-mode: lighten;
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  mix-blend-mode: overlay;
+  background-size: 160px 160px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* El color vuelve con el foco de teclado y, solo con cursor real, con hover */
+.duo-trigger:focus-within .duo-layer {
+  opacity: 0;
+}
+
+@media (hover: hover) {
+  .duo-trigger:hover .duo-layer {
+    opacity: 0;
+  }
+}
+
+/* Las anclas de sección y el foco por teclado quedan bajo el encabezado fijo */
+html {
+  scroll-padding-top: 5rem;
+}
+
+/* =========================
+   PREFERENCIAS DEL SISTEMA
+   Va al final para ganar a las reglas de arriba. El acortamiento global de 0,01 ms
+   no detiene las animaciones `infinite`, de ahí las reglas por nodo.
+   (MotionConfig reducedMotion="user" sigue montado pero ya no hay animaciones de Framer.)
+========================= */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .badge-spin, .marquee-track, .spin { animation: none !important; }
+  .rise, .rule-x, .rule-y { animation: none; }
+  .rule-x::before, .rule-x::after, .rule-y::before, .rule-y::after { animation: none; }
+
+  /* El marquee queda detenido, visible y legible: sin copia y sin botón que pausar */
+  .marquee-track { flex-wrap: wrap; width: auto; }
+  .marquee-list { flex-wrap: wrap; flex-shrink: 1; min-width: 0; }
+  .marquee-list li { white-space: normal; }
+  .marquee-copy { display: none; }
+  .marquee-pause { display: none; }
+}
+
+@media (forced-colors: active) {
+  .duo-sat, .duo-mul, .duo-lift { display: none; }
+
+  :focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 3px;
+  }
 }

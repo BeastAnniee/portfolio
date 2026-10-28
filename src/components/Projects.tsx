@@ -1,19 +1,27 @@
 import type { Dictionary } from '@/content/types.ts';
 import { facts } from '@/content/facts.ts';
+import { formatFicha } from '@/lib/ficha.ts';
 import ProjectCard from './ProjectCard';
 import SectionHeading from './SectionHeading';
 
 interface ProjectsProps {
   copy: Dictionary['projects'];
   techLabels: Dictionary['techLabels'];
+  /** Etiqueta de ficha («PROJ.»); el número es el índice real en `facts.projects.spotlight`. */
+  ficha: string;
 }
 
-const tones = ['bg-bento-purple-deep', 'bg-bento-mint', 'bg-bento-amber'];
-
-const Projects = ({ copy, techLabels }: ProjectsProps) => (
-  <section id="projects" aria-labelledby="projects-title" className="px-4 py-6 sm:px-6 lg:px-10">
-    <SectionHeading id="projects-title">{copy.title}</SectionHeading>
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 sm:gap-6">
+// Único bloque invertido del sitio: bone/carbon, sin acento ni grises.
+const Projects = ({ copy, techLabels, ficha }: ProjectsProps) => (
+  <section
+    id="projects"
+    aria-labelledby="projects-title"
+    className="inverted @container my-10 rounded-2xl border border-transparent bg-bone p-5 text-carbon @2xl:p-8"
+  >
+    <SectionHeading id="projects-title" inverted>
+      {copy.title}
+    </SectionHeading>
+    <div className="grid grid-cols-1 divide-y divide-carbon @2xl:grid-cols-2 @2xl:divide-x @2xl:divide-y-0">
       {facts.projects.spotlight.map((project, index) => (
         <ProjectCard
           key={project.id}
@@ -22,7 +30,9 @@ const Projects = ({ copy, techLabels }: ProjectsProps) => (
           techLabels={techLabels}
           resultLabel={copy.result}
           openLabel={copy.openProject}
-          tone={tones[index % tones.length]}
+          variant="inverted"
+          ficha={formatFicha(ficha, index)}
+          className="py-6 first:pt-0 last:pb-0 @2xl:px-6 @2xl:py-0 @2xl:first:pl-0 @2xl:last:pr-0"
         />
       ))}
     </div>

@@ -1,8 +1,8 @@
-import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import type { ProjectFact } from '@/content/facts.ts';
 import type { ProjectCopy } from '@/content/types.ts';
 import { resolveProjectMedia } from '@/lib/project-view.ts';
+import DuoImage from './DuoImage';
 import TechChips from './TechChips';
 
 interface ProjectCardProps {
@@ -11,37 +11,63 @@ interface ProjectCardProps {
   techLabels: Record<string, string>;
   resultLabel: string;
   openLabel: string;
-  tone: string;
+  /** `inverted`: sin caja, sobre bone con texto carbon. `module`: módulo carbon-2 con borde. */
+  variant: 'inverted' | 'module';
+  /** Microtexto de ficha («PROJ. 01»). */
+  ficha: string;
+  className?: string;
 }
 
-const ProjectCard = ({ project, copy, techLabels, resultLabel, openLabel, tone }: ProjectCardProps) => {
+const ProjectCard = ({
+  project,
+  copy,
+  techLabels,
+  resultLabel,
+  openLabel,
+  variant,
+  ficha,
+  className = '',
+}: ProjectCardProps) => {
   const { image, href } = resolveProjectMedia(project);
   const title = project.version ? `${project.name} ${project.version}` : project.name;
+  const inverted = variant === 'inverted';
 
   return (
-    <article className={`flex min-w-0 flex-col rounded-[20px] p-5 sm:p-6 ${tone}`}>
+    <article
+      className={`flex min-w-0 flex-col ${
+        inverted ? 'text-carbon' : 'rounded-xl border border-line bg-carbon-2 p-5 text-bone'
+      } ${className}`}
+    >
       {image && (
-        <div className="relative mb-4 h-40 w-full overflow-hidden rounded-[14px]">
-          <Image src={image} alt="" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
-        </div>
+        <DuoImage
+          src={image}
+          alt=""
+          sizes="(max-width: 768px) 100vw, 50vw"
+          className="mb-4 aspect-[16/9] rounded-lg"
+        />
       )}
-      <h3 className="mb-2 break-words font-display text-xl font-bold text-bento-black">{title}</h3>
-      <p className="mb-4 break-words text-sm leading-relaxed text-bento-black">{copy.description}</p>
+      <p className={`mb-2 font-mono text-xs uppercase tracking-[0.12em] ${inverted ? 'text-carbon' : 'text-bone-2'}`}>
+        {ficha}
+      </p>
+      <h3 className="mb-2 break-words font-display text-2xl uppercase">{title}</h3>
+      <p className="mb-4 max-w-[65ch] break-words text-base">{copy.description}</p>
       {copy.result && (
-        <p className="mb-4 break-words text-sm text-bento-black">
+        <p className="mb-4 max-w-[65ch] break-words text-base">
           <span className="font-semibold">{resultLabel}: </span>
           {copy.result}
         </p>
       )}
       <div className="mt-auto flex flex-col gap-4">
-        <TechChips items={project.tech} labels={techLabels} />
+        <TechChips items={project.tech} labels={techLabels} inverted={inverted} />
         {href && (
           <a
             href={href}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${openLabel}: ${title}`}
-            className="inline-flex min-h-11 w-fit items-center gap-1 rounded-full text-sm font-semibold text-bento-black underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-black focus-visible:ring-offset-2"
+            className={`inline-flex min-h-11 w-fit items-center gap-1 rounded-lg font-semibold underline underline-offset-4 ${
+              inverted ? 'text-carbon' : 'text-accent hover:text-bone'
+            }`}
           >
             {openLabel}
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />

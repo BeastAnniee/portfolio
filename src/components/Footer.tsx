@@ -12,7 +12,7 @@ interface FooterProps {
 }
 
 const linkClass =
-  'flex h-11 w-11 items-center justify-center rounded-full bg-bento-page text-bento-black transition-colors hover:bg-bento-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-purple focus-visible:ring-offset-2 focus-visible:ring-offset-bento-container';
+  'press flex h-11 w-11 items-center justify-center rounded-xl border border-line text-bone hover:bg-bone hover:text-carbon';
 
 const Footer = ({ email, github, linkedin, hero, common, footer }: FooterProps) => {
   const socialLinks = [
@@ -21,8 +21,8 @@ const Footer = ({ email, github, linkedin, hero, common, footer }: FooterProps) 
   ];
 
   return (
-    <footer className="px-4 py-10 sm:px-6 lg:px-10">
-      <div className="flex flex-col items-center gap-6">
+    <footer className="mx-auto mt-16 w-full max-w-7xl border-t border-line px-4 py-10 sm:px-6 lg:px-10">
+      <div className="flex flex-col items-start gap-6">
         <div className="flex items-center gap-3">
           {socialLinks.map((link) => {
             const Icon = link.icon;
@@ -35,14 +35,14 @@ const Footer = ({ email, github, linkedin, hero, common, footer }: FooterProps) 
                 aria-label={link.name}
                 className={linkClass}
               >
-                <Icon className="h-4 w-4" aria-hidden="true" />
+                <Icon className="h-5 w-5" aria-hidden="true" />
               </a>
             );
           })}
           <CopyEmailButton email={email} label={common.copyEmail} copiedText={common.emailCopied} />
         </div>
 
-        <p className="text-sm text-bento-graphite">{footer.builtBy}</p>
+        <p className="font-mono text-xs uppercase tracking-[0.12em] text-bone-2">{footer.builtBy}</p>
       </div>
     </footer>
   );

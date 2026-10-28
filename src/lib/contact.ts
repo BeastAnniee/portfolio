@@ -70,3 +70,8 @@ export async function sendContact(args: {
     clearTimeout(timer)
   }
 }
+
+/** Al volver a escribir tras un envío correcto, el «enviado» deja de describir el formulario. */
+export function statusAfterEdit<S extends string>(status: S): S | 'idle' {
+  return status === 'success' ? 'idle' : status
+}

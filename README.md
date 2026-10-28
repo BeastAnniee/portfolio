@@ -48,10 +48,10 @@ A personal portfolio built with Next.js, TypeScript, and Tailwind CSS. Showcases
 
 ## 🛠️ Customization
 
-- Edit your info and links in `src/components/Hero.tsx`, `Footer.tsx`, and `About.tsx`.
+- Edit your info and links in `src/components/Hero.tsx` and `Footer.tsx`; text lives in `src/content/` (English and Spanish).
 - Add or update projects in `src/components/Projects.tsx`.
 - Update contact methods and social links in `Footer.tsx`.
-- Change the 404 message in `src/app/not-found.tsx`.
+- Change the 404 message in `src/app/global-not-found.tsx`.
 - Styles are easily customizable via Tailwind classes.
 
 ---
