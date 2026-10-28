@@ -36,8 +36,8 @@ export default async function RootLayout({
   const { lang } = await params
   if (!isLocale(lang)) notFound()
   return (
-    <html lang={lang}>
-      <body className={fontClasses}>
+    <html lang={lang} className={fontClasses}>
+      <body>
         <SpeedInsights />
         <MotionProvider>{children}</MotionProvider>
       </body>

@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { validateContact, readEmailConfig, sendContact, CONTACT_FIELDS, TIMEOUT_MS } from './contact.ts'
+import { validateContact, readEmailConfig, sendContact, statusAfterEdit, CONTACT_FIELDS, TIMEOUT_MS } from './contact.ts'
 
 const valid = { name: 'Ana', email: 'ana@example.com', subject: 'Hola', message: 'Un mensaje' }
 const config = { serviceId: 's', templateId: 't', publicKey: 'k' }
@@ -85,4 +85,11 @@ test('sendContact: el temporizador se limpia tras un éxito rápido', async () =
   await sendContact({ send: async () => {}, config, data: valid, timeoutMs: 60_000 })
   const after = process.getActiveResourcesInfo().filter((x) => x === 'Timeout').length
   assert.ok(after <= before)
+})
+
+test('statusAfterEdit: escribir de nuevo borra el «enviado» y respeta el resto de estados', () => {
+  assert.equal(statusAfterEdit('success'), 'idle')
+  assert.equal(statusAfterEdit('sending'), 'sending')
+  assert.equal(statusAfterEdit('error'), 'error')
+  assert.equal(statusAfterEdit('idle'), 'idle')
 })

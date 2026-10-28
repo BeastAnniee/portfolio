@@ -244,3 +244,15 @@ test('Achievements: 4–6 entradas confirmadas, FLL sin años', () => {
     assert.ok(dict.achievements.items.deans.event.includes("Dean's List Semi-finalist"))
   }
 })
+
+test('ficha y marquee existen con las mismas claves en en y es', () => {
+  assert.deepEqual(Object.keys(en.ficha), ['exp', 'proj', 'lab', 'ach', 'edu'])
+  assert.deepEqual(Object.keys(es.ficha), Object.keys(en.ficha))
+  assert.deepEqual(Object.keys(en.marquee), ['label', 'pause', 'play'])
+  assert.deepEqual(Object.keys(es.marquee), Object.keys(en.marquee))
+  for (const dict of [en, es]) {
+    for (const value of [...Object.values(dict.ficha), ...Object.values(dict.marquee)]) {
+      assert.ok(value.trim().length > 0)
+    }
+  }
+})

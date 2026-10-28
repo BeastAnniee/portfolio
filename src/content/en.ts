@@ -38,8 +38,10 @@ export const en: Dictionary = {
     github: 'GitHub',
     linkedin: 'LinkedIn',
     photoAlt: 'Portrait of Jostin Aldair Nava',
-    badge: 'AVAILABLE FOR WORK • AVAILABLE FOR WORK • ',
+    badge: 'AVAILABLE FOR WORK • ',
   },
+  ficha: { exp: 'EXP.', proj: 'PROJ.', lab: 'LAB', ach: 'ACH.', edu: 'EDU.' },
+  marquee: { label: 'Credits', pause: 'Pause motion', play: 'Resume motion' },
   footer: { builtBy: 'Designed & built by Jostin Aldair Nava' },
   common: { copyEmail: 'Copy email address', emailCopied: 'Email copied to clipboard!' },
   notFound: {

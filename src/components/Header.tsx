@@ -15,21 +15,14 @@ interface HeaderProps {
 }
 
 const linkClass =
-  'inline-flex min-h-11 items-center rounded-full px-3 text-sm font-medium text-bento-graphite transition-colors duration-200 hover:text-bento-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-purple focus-visible:ring-offset-2 focus-visible:ring-offset-bento-container';
+  'inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg px-3 font-mono text-xs font-medium uppercase tracking-[0.12em] text-bone hover:bg-bone hover:text-carbon';
 
 const cvClass =
-  'inline-flex min-h-11 items-center rounded-full bg-bento-purple px-4 text-sm font-semibold text-bento-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-black focus-visible:ring-offset-2 focus-visible:ring-offset-bento-container';
+  'inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-transparent bg-accent px-4 font-mono text-xs font-medium uppercase tracking-[0.12em] text-carbon hover:bg-bone';
 
 const Header = ({ locale, nav, brand, cvHref, sections }: HeaderProps) => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 80);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -47,18 +40,14 @@ const Header = ({ locale, nav, brand, cvHref, sections }: HeaderProps) => {
   const close = () => setOpen(false);
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 border-b border-black/5 backdrop-blur-md transition-colors duration-300 ${
-        isScrolled ? 'bg-bento-container/95 shadow-sm' : 'bg-bento-container/80'
-      }`}
-    >
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-carbon">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 sm:px-6 lg:px-10">
         <a
           href="#hero"
-          className="min-w-0 truncate rounded-full font-display text-base font-extrabold tracking-tight text-bento-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-purple focus-visible:ring-offset-2 focus-visible:ring-offset-bento-container sm:text-lg"
+          className="inline-flex min-h-11 min-w-0 items-center truncate rounded-lg font-display text-xl uppercase tracking-wide text-bone"
         >
           {brand}
-          <span className="text-bento-purple">.</span>
+          <span className="text-accent">.</span>
         </a>
 
         <nav aria-label={nav.menuLabel} className="hidden items-center gap-1 xl:flex">
@@ -80,7 +69,7 @@ const Header = ({ locale, nav, brand, cvHref, sections }: HeaderProps) => {
           aria-controls="mobile-menu"
           aria-label={open ? nav.menuClose : nav.menuOpen}
           onClick={() => setOpen((value) => !value)}
-          className="flex min-h-11 min-w-11 items-center justify-center rounded-full bg-bento-page text-bento-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-purple focus-visible:ring-offset-2 focus-visible:ring-offset-bento-container xl:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-xl border border-line text-bone hover:bg-bone hover:text-carbon xl:hidden"
         >
           {open ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
         </button>
@@ -90,12 +79,12 @@ const Header = ({ locale, nav, brand, cvHref, sections }: HeaderProps) => {
         id="mobile-menu"
         aria-label={nav.menuLabel}
         hidden={!open}
-        className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-black/5 bg-bento-container px-4 py-3 sm:px-6 xl:hidden"
+        className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-carbon px-4 py-3 sm:px-6 xl:hidden"
       >
         <ul className="flex flex-col gap-1">
           {links.map((id) => (
             <li key={id}>
-              <a href={`#${id}`} onClick={close} className={`${linkClass} w-full`}>
+              <a href={`#${id}`} onClick={close} className={`${linkClass} w-full justify-start`}>
                 {nav.sections[id]}
               </a>
             </li>
@@ -106,7 +95,7 @@ const Header = ({ locale, nav, brand, cvHref, sections }: HeaderProps) => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={close}
-              className={`${cvClass} w-full justify-center`}
+              className={`${cvClass} w-full`}
             >
               {nav.cv}
             </a>

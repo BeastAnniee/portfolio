@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
 import { Mail } from 'lucide-react';
+import { copyFeedbackMs } from '@/lib/copy-feedback';
 
 interface CopyEmailButtonProps {
   email: string;
@@ -12,6 +12,7 @@ interface CopyEmailButtonProps {
 
 const CopyEmailButton = ({ email, label, copiedText }: CopyEmailButtonProps) => {
   const [showCopied, setShowCopied] = useState(false);
+  const [copyFailed, setCopyFailed] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => () => {
@@ -19,32 +20,33 @@ const CopyEmailButton = ({ email, label, copiedText }: CopyEmailButtonProps) => 
   }, []);
 
   const handleCopy = async () => {
+    let copyOk = true;
     try {
       await navigator.clipboard.writeText(email);
     } catch {
-      return;
+      // Sin permiso o sin HTTPS: se muestra el correo para que la persona lo copie a mano.
+      copyOk = false;
     }
+    setCopyFailed(!copyOk);
     setShowCopied(true);
     if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => setShowCopied(false), 2500);
+    timer.current = setTimeout(() => setShowCopied(false), copyFeedbackMs(copyOk));
   };
 
   return (
     <>
-      <motion.button
+      <button
         type="button"
         onClick={handleCopy}
         aria-label={label}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.95 }}
-        className="flex h-11 w-11 items-center justify-center rounded-full bg-bento-page text-bento-black transition-colors hover:bg-bento-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bento-purple focus-visible:ring-offset-2 focus-visible:ring-offset-bento-container"
+        className="press flex h-11 w-11 items-center justify-center rounded-xl border border-line text-bone hover:bg-bone hover:text-carbon"
       >
         <Mail className="h-5 w-5" aria-hidden="true" />
-      </motion.button>
+      </button>
       <div role="status" aria-live="polite">
         {showCopied && (
-          <div className="fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full bg-bento-black px-6 py-3 text-sm font-medium text-bento-container animate-fade-in">
-            {copiedText}
+          <div className="fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-xl border border-transparent bg-bone px-6 py-3 text-base font-medium text-carbon animate-fade-in">
+            {copyFailed ? email : copiedText}
           </div>
         )}
       </div>
