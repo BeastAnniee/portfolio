@@ -3,7 +3,7 @@ type: spec
 id: 002
 title: Identidad visual póster brutalista — tokens, tipografía, sello y movimiento
 aliases: ["002 · Identidad visual póster brutalista"]
-status: approved
+status: validated
 risk: R2
 created: 2026-10-27
 owner: Jostin Aldair Nava
@@ -34,6 +34,8 @@ Quien visita (casi siempre un reclutador en móvil, una vez, con poca atención)
 
 **Fuera de alcance (explícito)**
 - Cambiar textos de contenido, datos factuales, orden de secciones, rutas, anclas, metadatos o el comportamiento de redirección por idioma de la 001. Solo se admiten **etiquetas de microtexto nuevas** (p. ej. «EXP. 01») añadidas a ambos diccionarios, sin afirmaciones nuevas.
+- **Enmienda (confirmada por la persona el 2026-10-27, registrada tras `/tc-review`):** única excepción al párrafo anterior, `hero.badge` pasa de dos repeticiones de la frase a una sola vuelta (`AVAILABLE FOR WORK • ` / `DISPONIBLE PARA TRABAJAR • `), mismo mensaje y sin afirmación nueva, para que la caja del sello quepa a 320 px (ver `design.md` §6). Lo mismo para `marquee.pause/play` (microtexto): «Pause motion / Resume motion» y «Pausar animaciones / Reanudar animaciones», porque el botón detiene también el sello.
+- **Enmienda (confirmada por la persona el 2026-10-28, al elegir cerrar los MINOR de `review.md` antes de `/tc-ship`):** excepciones a REQ-22 sobre el comportamiento de contacto, todas de accesibilidad o robustez y sin afirmación nueva: (a) `statusAfterEdit`: volver a escribir tras un envío borra el aviso de «enviado»; (b) «Enviando…» pasa a la línea de estado `sr-only` para no leerse dos veces; (c) si falla la copia del correo, el aviso muestra el correo en texto 10 s (frente a 2,5 s si copia); (d) `experimental.globalNotFound` en `next.config.ts` y `src/app/global-not-found.tsx` sustituyen a `not-found.tsx`, con `<title>` propio.
 - Tema claro o conmutador de tema: el sitio es de **un solo tema oscuro**.
 - Parpadeo de retícula al cargar, grano animado y cualquier movimiento fuera del catálogo de `DESIGN.md` §6.
 - Reemplazar `public/resume.pdf`; cambiar EmailJS o su flujo más allá de estilos y estados ya existentes.
