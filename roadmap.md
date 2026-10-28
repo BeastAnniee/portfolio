@@ -56,7 +56,9 @@ CV.
 
 ---
 
-## Track A — Refresco visual: rediseño a estética Bento Grid
+## Track A — Refresco visual (superado por la spec 002)
+
+> **Superado (2026-10):** la dirección bento grid se sustituyó por el sistema póster de `docs/specs/002-poster-visual/`. El texto de abajo queda como historia; no lo ejecutes.
 
 **Decisión tomada (2026-08-19):** ya no es "personalizar vs. rediseñar" — Jostin encontró una
 dirección de diseño concreta (estética bento grid tipo dashboard, colores planos, tipografía

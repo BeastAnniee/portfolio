@@ -37,7 +37,7 @@ Tono: **póster brutalista editorial, oscuro y «washed»**. Cartel impreso desg
 ## 4. Sistema existente (qué se reutiliza)
 - Se **reemplazan** los tokens bento de `src/app/globals.css` (`--color-bento-*`) y las fuentes de `src/app/layout.tsx` (Bricolage/Inter) por los nuevos.
 - Se reutilizan: Next 15, Tailwind 4 (`@theme`), Framer Motion con `MotionConfig reducedMotion="user"` (`src/components/MotionProvider.tsx`), `lucide-react`, `next/font`, la estructura `src/components/*` y el patrón de focus-visible. El sello de `SignatureBadge.tsx` se rediseña como acento único.
-- Código muerto a retirar en fase propia: `src/components/Particles.tsx` y la dependencia `ogl` (requiere ADR).
+- `src/components/Particles.tsx` y la dependencia `ogl` **ya se retiraron** (ADR 0001, spec 002).
 - Componentes nuevos solo si lo existente no basta, y sin dependencias nuevas sin `/tc-adr` (en particular, i18n sin `next-intl` salvo ADR).
 
 ## 5. Superficies protegidas
@@ -56,5 +56,5 @@ Ninguna; el rediseño puede reorganizar, renombrar y reordenar secciones. Se man
 ## 7. Decisiones sobre reglas de terceros
 - La guía neobrutalista web (neubrutalism.com: borde 3 px, sombra dura, radio 0, paleta de 3 acentos) **no aplica**: la persona aportó una referencia correctiva (póster oscuro, un acento, línea fina). Gana la dirección de este archivo.
 - La regla del spec bento «sin sombras realistas» se conserva y se amplía a «sin sombras».
-- `.claude/skills/portfolio/references/bento-design-spec.md` queda **obsoleto** como sistema objetivo; se reemplazará por el contrato de diseño de la spec.
+- `.claude/skills/portfolio/references/bento-design-spec.md` se **eliminó**; `design-system.md` de la skill remite al contrato de diseño de la spec 002.
 - La metáfora de concierto no sustituye nombres claros de navegación (reclutadores, bilingüe).

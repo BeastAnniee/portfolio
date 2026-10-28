@@ -3,7 +3,7 @@
 ## Vista general
 Sitio Next.js 15 (App Router, TypeScript, Tailwind 4) bilingüe y estático:
 
-- `src/app/[lang]/` es el **layout raíz** (`<html lang>`), con `generateStaticParams` (`en`, `es`) y `dynamicParams = false`: `/en` y `/es` se generan en el build; cualquier otra ruta responde con `src/app/not-found.tsx`.
+- `src/app/[lang]/` es el **layout raíz** (`<html lang>`), con `generateStaticParams` (`en`, `es`) y `dynamicParams = false`: `/en` y `/es` se generan en el build; cualquier otra ruta responde con `src/app/global-not-found.tsx`.
 - `src/middleware.ts` solo atiende `/` y redirige (307, `Vary: Accept-Language`) según `negotiateLocale` (`src/lib/locale.ts`).
 - `src/content/` es la capa de contenido: `facts.ts` (datos sin idioma, una sola vez), `en.ts` / `es.ts` (prosa, tipados con `Dictionary` de `types.ts`) e `index.ts` (`getDictionary`, `SECTION_IDS`). Los componentes solo renderizan.
 - `src/lib/*.ts` son módulos puros probados con el ejecutor de Node (`npm test`); sin alias `@/`, imports relativos con extensión `.ts`.

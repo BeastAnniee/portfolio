@@ -39,20 +39,15 @@ sesión sin decirlo primero.
 
 ## Sistema de diseño
 
-El sistema objetivo es el rediseño **bento grid** documentado en
-`references/bento-design-spec.md` (paleta, tipografía, layout, componentes, requisitos de
-accesibilidad) — es la fuente de verdad para cualquier trabajo visual nuevo. `references/design-system.md`
-queda solo como referencia del sistema anterior (navy/teal), para saber qué hay que reemplazar y
-no dejar restos mezclados a medias.
+El sistema vigente es el **póster oscuro** de la spec 002 (carbón, hueso y un solo acento rosa;
+Anton + Work Sans + IBM Plex Mono; marcos de línea fina, sin sombras ni degradados). La fuente de
+verdad es `docs/design/DESIGN.md` y el contrato `docs/specs/002-poster-visual/design.md`;
+`references/design-system.md` los resume. Cualquier trabajo visual nuevo respeta esos tokens y
+pasa por `/tc-design`; no mezcles restos de sistemas anteriores.
 
-Para ejecutar el rediseño:
-- Usa el skill `design` de Claude Code para maquetar el grid bento como canvas visual antes de
-  tocar componentes — más rápido iterar layout/paleta ahí que por prueba-y-error en el navegador.
-- Usa el skill `dataviz` de Claude Code para las tarjetas "stat" (número enorme + label) — sus
-  guías de forma/color para stat tiles aplican directo aunque no haya gráficas de por medio.
-- No instales skills de terceros para esto sin que Jostin revise el código fuente primero — hay
-  paquetes de la comunidad enfocados en bento grids, pero un skill de terceros puede inyectar
-  instrucciones que se siguen en cada sesión. Con `design` + `dataviz` (first-party) alcanza.
+- Usa el skill `dataviz` de Claude Code para visualizaciones de datos si aparecen.
+- No instales skills de terceros para diseño sin que Jostin revise el código fuente primero: un
+  skill de terceros puede inyectar instrucciones que se siguen en cada sesión.
 
 ## Checklist para agregar un proyecto nuevo a `Projects.tsx`
 
