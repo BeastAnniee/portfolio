@@ -3,7 +3,7 @@ type: spec
 id: 002
 title: Identidad visual póster brutalista — tokens, tipografía, sello y movimiento
 aliases: ["002 · Identidad visual póster brutalista"]
-status: validated
+status: in-review
 risk: R2
 created: 2026-10-27
 owner: Jostin Aldair Nava
