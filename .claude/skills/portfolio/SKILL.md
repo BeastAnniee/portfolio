@@ -39,9 +39,10 @@ sesión sin decirlo primero.
 
 ## Sistema de diseño
 
-El sistema vigente es el **póster oscuro** de la spec 002 (carbón, hueso y un solo acento rosa;
-Anton + Work Sans + IBM Plex Mono; marcos de línea fina, sin sombras ni degradados). La fuente de
-verdad es `docs/design/DESIGN.md` y el contrato `docs/specs/002-poster-visual/design.md`;
+El sistema vigente es el **póster oscuro con carácter propio** de la spec 003 (carbón, hueso y un solo
+acento rosa saturado; Anton + Work Sans + IBM Plex Mono; marcos de línea fina, textura y ornamentos,
+sin sombras ni degradados). La fuente de verdad es `docs/design/DESIGN.md` y el contrato
+`docs/specs/003-poster-caracter/design.md`;
 `references/design-system.md` los resume. Cualquier trabajo visual nuevo respeta esos tokens y
 pasa por `/tc-design`; no mezcles restos de sistemas anteriores.
 

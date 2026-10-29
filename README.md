@@ -9,7 +9,7 @@ A personal portfolio built with Next.js, TypeScript, and Tailwind CSS. Showcases
 ## ✨ Features
 
 - **Modern stack:** Next.js (App Router), React, TypeScript, Tailwind CSS
-- **Framer Motion** for smooth animations
+- **Motion in plain CSS** (transform and opacity only), with `prefers-reduced-motion` respected
 - **Responsive** and mobile-first design
 - **Accessible**: keyboard navigation, aria labels
 - **Contact form** with EmailJS integration and toast feedback
