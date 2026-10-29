@@ -45,6 +45,7 @@ export interface Dictionary {
     badge: string
   }
   ficha: { exp: string; proj: string; lab: string; ach: string; edu: string }
+  sticker: { label: string }
   marquee: { label: string; pause: string; play: string }
   footer: { builtBy: string }
   common: { copyEmail: string; emailCopied: string }

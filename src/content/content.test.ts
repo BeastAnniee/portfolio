@@ -256,3 +256,11 @@ test('ficha y marquee existen con las mismas claves en en y es', () => {
     }
   }
 })
+
+test('pegatina: la clave sticker.label existe con el microtexto del contrato en en y es', () => {
+  assert.deepEqual(Object.keys(en.sticker), ['label'])
+  assert.deepEqual(Object.keys(es.sticker), ['label'])
+  assert.ok(en.sticker.label.length > 0 && es.sticker.label.length > 0)
+  assert.equal(en.sticker.label, 'Get in touch')
+  assert.equal(es.sticker.label, 'Escríbeme')
+})

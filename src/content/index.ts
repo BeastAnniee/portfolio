@@ -3,17 +3,7 @@ import type { Dictionary } from './types.ts'
 import { en } from './en.ts'
 import { es } from './es.ts'
 
-export const SECTION_IDS = [
-  'hero',
-  'now',
-  'experience',
-  'projects',
-  'stack',
-  'achievements',
-  'education',
-  'lab',
-  'contact',
-] as const
+export { SECTION_IDS } from './sections.ts'
 
 const dictionaries: Record<Locale, Dictionary> = { en, es }
 
