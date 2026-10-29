@@ -13,7 +13,7 @@
 
 /* =========================
    TOKENS
-   Fuente de verdad: docs/specs/002-poster-visual/design.md (§2) y docs/design/DESIGN.md.
+   Fuente de verdad: docs/specs/003-poster-caracter/design.md (§2) y docs/design/DESIGN.md.
 ========================= */
 @theme {
 
@@ -22,7 +22,7 @@
   --color-bone: #E9E4D8;
   --color-bone-2: #A8A398;
   --color-line: #7A766D;
-  --color-accent: #F29BB0;
+  --color-accent: #EE5583;
 
   --font-display: var(--font-anton), 'Anton Fallback', sans-serif;
   --font-body: var(--font-work-sans), system-ui, sans-serif;
@@ -80,8 +80,14 @@
     outline-offset: 3px;
   }
 
-  .inverted :focus-visible {
+  .inverted :focus-visible,
+  [data-block="accent"] :focus-visible {
     outline-color: var(--color-carbon);
+  }
+
+  [data-block="accent"] ::selection {
+    background: var(--color-carbon);
+    color: var(--color-bone);
   }
 }
 
@@ -112,8 +118,65 @@
 .rise {
   display: inline-block;
   vertical-align: top;
-  animation: rise 360ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
-  animation-delay: calc(var(--i, 0) * 60ms);
+  animation: rise 200ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 18ms);
+}
+
+/* Nombre recortado por el borde inferior del marco (--cut = 0 lo desactiva) */
+.name-cut {
+  --cut: .07em;
+  clip-path: inset(0 0 var(--cut) 0);
+  margin-bottom: calc(var(--cut) * -1);
+}
+
+/* Pegatina: un solo transform (rotación), sin escala */
+.sticker {
+  --r: -6deg;
+  transform: rotate(var(--r));
+  transition: transform 150ms ease-out;
+}
+
+.sticker:focus-visible {
+  --r: -12deg;
+}
+
+/* Parallax decorativo: CSS scroll-driven en el compositor; sin soporte queda estático */
+@keyframes drift {
+  from { transform: translateY(calc(var(--d) * -1)); }
+  to { transform: translateY(var(--d)); }
+}
+
+.parallax {
+  --d: calc(var(--d-full, 0px) / 2);
+}
+
+@media (min-width: 768px) {
+  .parallax {
+    --d: var(--d-full, 0px);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .parallax {
+    animation: drift linear both;
+    animation-timeline: view();
+  }
+}
+
+/* Vista previa del Lab: oculta salvo con data-preview (cursor real, sin reduced-motion) y ≥ 48 rem */
+.lab-preview {
+  display: none;
+  transition: transform 120ms ease-out, opacity 150ms ease-out;
+}
+
+@container (min-width: 48rem) {
+  [data-preview] .lab-preview {
+    display: block;
+  }
+
+  [data-preview] .lab-inline {
+    display: none;
+  }
 }
 
 /* Filetes que se dibujan: pseudo-elementos con borde real (visibles en forced-colors) */
@@ -219,8 +282,8 @@ html[data-motion-paused] .marquee-track {
 }
 
 /* =========================
-   IMAGEN EN DUOTONO (carbón + acento) con grano estático
-   Capas, de abajo arriba: imagen a color → saturation → multiply accent → lighten carbon → grano.
+   IMAGEN EN DUOTONO (carbón + acento) con grano estático (0,26) y punteado
+   Capas, de abajo arriba: imagen a color → saturation → multiply accent → lighten carbon → punteado → grano.
 ========================= */
 .duo {
   position: relative;
@@ -255,10 +318,60 @@ html[data-motion-paused] .marquee-track {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.18;
+  opacity: 0.26;
   mix-blend-mode: overlay;
   background-size: 160px 160px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* =========================
+   TEXTURAS (estáticas, sin ráster, siempre capas vacías: nunca debajo de texto)
+   Tile de 8 px con un círculo (halftone). Sin animación y ocultas en forced-colors.
+========================= */
+.tex {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-size: 8px 8px;
+}
+
+.tex-dots-bone {
+  opacity: 0.3;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Ccircle cx='4' cy='4' r='1.5' fill='%23E9E4D8'/%3E%3C/svg%3E");
+}
+
+.tex-dots-carbon {
+  opacity: 0.2;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Ccircle cx='4' cy='4' r='1.5' fill='%23141414'/%3E%3C/svg%3E");
+}
+
+.duo-dots {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-size: 8px 8px;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Ccircle cx='4' cy='4' r='1.5' fill='%23141414'/%3E%3C/svg%3E");
+}
+
+/* Papel arrugado (condicional): iluminación difusa de luz distante sobre ruido, mezclada en multiply.
+   Solo en la zona derecha de Contacto, sin texto encima. */
+.tex-paper {
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-size: 240px 240px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.02 .035' numOctaves='4' seed='4' stitchTiles='stitch' result='n'/%3E%3CfeDiffuseLighting in='n' lighting-color='%23ffffff' surfaceScale='9'%3E%3CfeDistantLight azimuth='45' elevation='32'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+}
+
+/* Borde superior rasgado del bloque de acento */
+.torn-top {
+  clip-path: polygon(0 6px, 4% 1px, 8% 8px, 12% 3px, 16% 9px, 20% 2px, 24% 7px, 28% 0, 32% 8px, 36% 4px, 40% 10px, 44% 1px, 48% 6px, 52% 2px, 56% 9px, 60% 3px, 64% 8px, 68% 0, 72% 7px, 76% 4px, 80% 10px, 84% 2px, 88% 6px, 92% 1px, 96% 8px, 100% 3px, 100% 100%, 0 100%);
+}
+
+/* Ornamentos SVG decorativos */
+.ornament {
+  pointer-events: none;
 }
 
 /* El color vuelve con el foco de teclado y, solo con cursor real, con hover */
@@ -269,6 +382,10 @@ html[data-motion-paused] .marquee-track {
 @media (hover: hover) {
   .duo-trigger:hover .duo-layer {
     opacity: 0;
+  }
+
+  .sticker:hover {
+    --r: -12deg;
   }
 }
 
@@ -292,7 +409,10 @@ html {
   }
 
   .badge-spin, .marquee-track, .spin { animation: none !important; }
-  .rise, .rule-x, .rule-y { animation: none; }
+  .rise, .parallax, .rule-x, .rule-y { animation: none; }
+  .sticker { transition: none; }
+  .sticker:hover, .sticker:focus-visible { --r: -6deg; }
+  .lab-preview { display: none !important; }
   .rule-x::before, .rule-x::after, .rule-y::before, .rule-y::after { animation: none; }
 
   /* El marquee queda detenido, visible y legible: sin copia y sin botón que pausar */
@@ -304,7 +424,12 @@ html {
 }
 
 @media (forced-colors: active) {
-  .duo-sat, .duo-mul, .duo-lift { display: none; }
+  .duo-sat, .duo-mul, .duo-lift, .duo-dots, .tex, .ornament { display: none; }
+
+  .torn-top {
+    clip-path: none;
+    border-top: 2px solid CanvasText;
+  }
 
   :focus-visible {
     outline: 2px solid Highlight;
