@@ -11,8 +11,8 @@ interface ProjectCardProps {
   techLabels: Record<string, string>;
   resultLabel: string;
   openLabel: string;
-  /** `inverted`: sin caja, sobre bone con texto carbon. `module`: módulo carbon-2 con borde. */
-  variant: 'inverted' | 'module';
+  /** `inverted`: sobre bone con texto carbon. `row`: fila del Lab (sin caja); su imagen es `lab-inline`. */
+  variant: 'inverted' | 'row';
   /** Microtexto de ficha («PROJ. 01»). */
   ficha: string;
   className?: string;
@@ -34,16 +34,14 @@ const ProjectCard = ({
 
   return (
     <article
-      className={`flex min-w-0 flex-col ${
-        inverted ? 'text-carbon' : 'rounded-xl border border-line bg-carbon-2 p-5 text-bone'
-      } ${className}`}
+      className={`flex min-w-0 flex-col ${inverted ? 'text-carbon' : 'text-bone'} ${className}`}
     >
       {image && (
         <DuoImage
           src={image}
           alt=""
           sizes="(max-width: 768px) 100vw, 50vw"
-          className="mb-4 aspect-[16/9] rounded-lg"
+          className={`mb-4 aspect-[16/9] rounded-lg ${inverted ? '' : 'lab-inline w-full max-w-xs'}`}
         />
       )}
       <p className={`mb-2 font-mono text-xs uppercase tracking-[0.12em] ${inverted ? 'text-carbon' : 'text-bone-2'}`}>

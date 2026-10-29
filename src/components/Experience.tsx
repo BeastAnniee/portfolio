@@ -1,6 +1,7 @@
 import type { Dictionary } from '@/content/types.ts';
 import { facts } from '@/content/facts.ts';
-import { formatFicha } from '@/lib/ficha.ts';
+import { formatFicha, formatSectionFicha } from '@/lib/ficha.ts';
+import CountUp from './CountUp';
 import SectionHeading from './SectionHeading';
 import TechChips from './TechChips';
 
@@ -17,7 +18,7 @@ const micro = 'font-mono text-xs uppercase tracking-[0.12em] text-bone-2';
 
 const Experience = ({ copy, techLabels, ficha }: ExperienceProps) => (
   <section id="experience" aria-labelledby="experience-title" className="@container py-10">
-    <SectionHeading id="experience-title">{copy.title}</SectionHeading>
+    <SectionHeading id="experience-title" ficha={formatSectionFicha('experience')}>{copy.title}</SectionHeading>
 
     {jobs.length === 0 ? (
       <p className="border-t border-line py-6 text-base text-bone">{copy.empty}</p>
@@ -44,7 +45,7 @@ const Experience = ({ copy, techLabels, ficha }: ExperienceProps) => (
                     {job.metrics.map((metric, i) => (
                       <div key={item.metrics[i]} className="flex min-w-0 flex-col-reverse border-l border-line pl-4">
                         <dt className={`mt-1 break-words ${micro}`}>{item.metrics[i]}</dt>
-                        <dd className="font-display text-2xl leading-none text-accent">{metric.value}</dd>
+                        <dd className="font-display text-2xl leading-none text-accent"><CountUp value={metric.value} /></dd>
                       </div>
                     ))}
                   </dl>

@@ -5,6 +5,7 @@ import { ArrowUpRight, Clock } from 'lucide-react';
 import type { Dictionary } from '@/content/types.ts';
 import type { Locale } from '@/lib/locale.ts';
 import { nowStatus } from '@/lib/now-status.ts';
+import { formatSectionFicha } from '@/lib/ficha.ts';
 import SectionHeading from './SectionHeading';
 
 interface NowCard {
@@ -41,7 +42,7 @@ const Now = ({ locale, updatedAt, cards, copy }: NowProps) => {
 
   return (
     <section id="now" aria-labelledby="now-title" className="@container py-10">
-      <SectionHeading id="now-title">{copy.title}</SectionHeading>
+      <SectionHeading id="now-title" ficha={formatSectionFicha('now')}>{copy.title}</SectionHeading>
       <p className="mb-6 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.12em] text-bone-2">
         {!fresh && <Clock className="h-4 w-4 shrink-0" aria-hidden="true" />}
         <span>

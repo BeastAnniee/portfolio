@@ -41,6 +41,7 @@ export const es: Dictionary = {
     badge: 'DISPONIBLE PARA TRABAJAR • ',
   },
   ficha: { exp: 'EXP.', proj: 'PROY.', lab: 'LAB', ach: 'LOGRO', edu: 'EDU.' },
+  sticker: { label: 'Escríbeme' },
   marquee: { label: 'Créditos', pause: 'Pausar animaciones', play: 'Reanudar animaciones' },
   footer: { builtBy: 'Diseñado y construido por Jostin Aldair Nava' },
   common: { copyEmail: 'Copiar correo electrónico', emailCopied: '¡Correo copiado al portapapeles!' },

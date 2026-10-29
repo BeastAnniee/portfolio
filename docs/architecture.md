@@ -22,7 +22,7 @@ Sitio Next.js 15 (App Router, TypeScript, Tailwind 4) bilingüe y estático:
 ## Cómo añadir
 - **Proyecto:** una entrada en `facts.projects.spotlight` (o `lab`) con `id`, `name`, `href`, `tech` y, opcional, `image`; y su `description`/`result` en `en.ts` y `es.ts`. No se toca ningún componente.
 - **Idioma:** añadirlo a `LOCALES`, crear su diccionario con `Dictionary` y registrarlo en `index.ts`; revisar `metadata.ts` y el selector.
-- **Sección:** ampliar `SECTION_IDS`, `Dictionary` y los dos diccionarios a la vez.
+- **Sección:** ampliar `SECTION_IDS` (en `src/content/sections.ts`), `Dictionary` y los dos diccionarios a la vez.
 
 ## Glosario del dominio
 - **WMS / PDA / POP:** sistema de gestión de almacén / terminal portátil de captura / punto de operación en planta (término dado por la persona para el MES).

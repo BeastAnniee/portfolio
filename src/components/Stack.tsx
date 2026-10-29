@@ -1,5 +1,6 @@
 import type { Dictionary } from '@/content/types.ts';
 import { facts } from '@/content/facts.ts';
+import { formatSectionFicha } from '@/lib/ficha.ts';
 import SectionHeading from './SectionHeading';
 import TechChips from './TechChips';
 
@@ -12,7 +13,7 @@ const groups = ['development', 'dataAutomation', 'tools'] as const;
 
 const Stack = ({ copy, techLabels }: StackProps) => (
   <section id="stack" aria-labelledby="stack-title" className="@container py-10">
-    <SectionHeading id="stack-title">{copy.title}</SectionHeading>
+    <SectionHeading id="stack-title" ficha={formatSectionFicha('stack')}>{copy.title}</SectionHeading>
     <div className="grid border-t border-line @2xl:grid-cols-3 @2xl:divide-x @2xl:divide-line">
       {groups.map((group) => (
         <div
