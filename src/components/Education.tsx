@@ -1,6 +1,6 @@
 import type { Dictionary } from '@/content/types.ts';
 import { facts } from '@/content/facts.ts';
-import { formatFicha } from '@/lib/ficha.ts';
+import { formatFicha, formatSectionFicha } from '@/lib/ficha.ts';
 import SectionHeading from './SectionHeading';
 
 interface EducationProps {
@@ -13,7 +13,7 @@ const micro = 'font-mono text-xs uppercase tracking-[0.12em] text-bone-2';
 
 const Education = ({ copy, ficha }: EducationProps) => (
   <section id="education" aria-labelledby="education-title" className="@container py-10">
-    <SectionHeading id="education-title">{copy.title}</SectionHeading>
+    <SectionHeading id="education-title" ficha={formatSectionFicha('education')}>{copy.title}</SectionHeading>
 
     <ul>
       {facts.education.map((entry, index) => (

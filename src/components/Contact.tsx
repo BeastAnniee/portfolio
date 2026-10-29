@@ -14,6 +14,8 @@ import {
   type ContactError,
   type ContactField,
 } from '@/lib/contact.ts';
+import { formatSectionFicha } from '@/lib/ficha.ts';
+import { Parallax, RingMarks, Star4 } from './Ornaments';
 
 interface ContactProps {
   copy: Dictionary['contact'];
@@ -22,8 +24,10 @@ interface ContactProps {
 
 type Status = 'idle' | 'sending' | 'success' | 'error';
 
-const inputClass =
-  'min-h-11 w-full rounded-xl bg-carbon-2 px-4 py-3 text-base text-bone placeholder:text-bone-2';
+// Dentro del bloque de acento: campos carbon con texto bone; en error, bone con texto carbon y borde de 2 px.
+const fieldBase = 'min-h-11 w-full rounded-xl px-4 py-3 text-base';
+const fieldNormal = 'border border-carbon bg-carbon text-bone placeholder:text-bone-2';
+const fieldError = 'border-2 border-carbon bg-bone text-carbon placeholder:text-carbon';
 
 const emptyData: ContactData = { name: '', email: '', subject: '', message: '' };
 
@@ -95,11 +99,11 @@ const Contact = ({ copy, email }: ContactProps) => {
       'aria-invalid': message ? true : undefined,
       'aria-describedby': message ? `contact-${field}-error` : undefined,
       placeholder: copy.placeholders[field],
-      className: `${inputClass} ${message ? 'border-2 border-accent' : 'border border-line'}${type === 'textarea' ? ' resize-y' : ''}`,
+      className: `${fieldBase} ${message ? fieldError : fieldNormal}${type === 'textarea' ? ' resize-y' : ''}`,
     };
     return (
       <div key={field}>
-        <label htmlFor={common.id} className="mb-2 block font-mono text-xs font-medium uppercase tracking-[0.12em] text-bone">
+        <label htmlFor={common.id} className="mb-2 block font-mono text-xs font-bold uppercase tracking-[0.12em] text-carbon">
           {copy.labels[field]}
         </label>
         {type === 'textarea' ? (
@@ -121,8 +125,8 @@ const Contact = ({ copy, email }: ContactProps) => {
           />
         )}
         {message && (
-          <p id={`contact-${field}-error`} className="mt-2 flex items-start gap-2 text-base text-bone">
-            <CircleAlert className="mt-1 h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
+          <p id={`contact-${field}-error`} className="mt-2 flex items-start gap-2 text-base text-carbon">
+            <CircleAlert className="mt-1 h-4 w-4 shrink-0" aria-hidden="true" />
             <span>{message}</span>
           </p>
         )}
@@ -131,77 +135,91 @@ const Contact = ({ copy, email }: ContactProps) => {
   };
 
   return (
-    <section id="contact" aria-labelledby="contact-title" className="@container py-10">
-      <div className="max-w-2xl">
-        <div className="mb-8">
-          <p className="mb-2 font-mono text-xs font-medium uppercase tracking-[0.12em] text-bone-2">
-            {copy.badge}
-          </p>
-          <h2
-            id="contact-title"
-            className="mb-4 font-display text-[clamp(2.5rem,8cqi,4.5rem)] uppercase leading-[0.95] text-accent"
-          >
-            {copy.title}
-          </h2>
-          <p className="max-w-[65ch] text-base text-bone">{copy.intro}</p>
-        </div>
-
-        <form onSubmit={handleSubmit} noValidate className="space-y-5">
-          <div className="grid gap-5 @xl:grid-cols-2">
-            {renderField('name', 'text')}
-            {renderField('email', 'email')}
-          </div>
-          {renderField('subject', 'text')}
-          {renderField('message', 'textarea')}
-
-          <div aria-live="polite">
-            {status === 'sending' && (
-              <p role="status" className="sr-only">{copy.sending}</p>
-            )}
-            {status === 'success' && (
-              <p role="status" className="flex items-center gap-2 rounded-xl border border-bone px-4 py-3 text-base text-bone">
-                <CircleCheck className="h-4 w-4 shrink-0" aria-hidden="true" />
-                {copy.success}
-              </p>
-            )}
-          </div>
-          {status === 'error' && (
-            <div
-              ref={failureRef}
-              tabIndex={-1}
-              role="alert"
-              className="flex items-start gap-2 rounded-xl border-2 border-accent px-4 py-3 text-base text-bone"
+    <section id="contact" aria-labelledby="contact-title" data-block="accent"
+      className="torn-top @container relative overflow-x-clip bg-accent pb-10 pt-20 text-carbon md:pb-44"
+    >
+      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-64 lg:block" aria-hidden="true">
+        <div className="tex tex-paper" aria-hidden="true" />
+        <div className="tex tex-dots-carbon" aria-hidden="true" />
+      </div>
+      <Parallax d={20} className="absolute right-4 top-6 sm:right-6">
+        <Star4 size={112} className="h-14 w-14 sm:h-28 sm:w-28" />
+      </Parallax>
+      <Parallax d={12} className="absolute bottom-6 right-4 hidden md:block sm:right-6">
+        <RingMarks size={140} />
+      </Parallax>
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
+        <div className="max-w-2xl">
+          <div className="mb-8">
+            <p className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-carbon">
+              {formatSectionFicha('contact')} {copy.badge}
+            </p>
+            <h2
+              id="contact-title"
+              className="mb-4 pr-16 font-display text-[clamp(2.5rem,8cqi,4.5rem)] uppercase leading-[0.95] text-carbon sm:pr-32 lg:pr-0"
             >
-              <CircleAlert className="mt-1 h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
-              <span>
-                {copy.failure}{' '}
-                <a href={`mailto:${email}`} className="font-semibold text-accent underline underline-offset-4">
-                  {email}
-                </a>
-              </span>
+              {copy.title}
+            </h2>
+            <p className="max-w-[65ch] text-lg font-medium leading-relaxed text-carbon">{copy.intro}</p>
+          </div>
+
+          <form onSubmit={handleSubmit} noValidate className="space-y-5">
+            <div className="grid gap-5 @xl:grid-cols-2">
+              {renderField('name', 'text')}
+              {renderField('email', 'email')}
             </div>
-          )}
+            {renderField('subject', 'text')}
+            {renderField('message', 'textarea')}
 
-          <div className="pt-2">
-            <button
-              type="submit"
-              disabled={status === 'sending'}
-              className="press inline-flex h-12 items-center gap-2 rounded-xl border border-transparent bg-accent px-8 font-semibold text-carbon hover:bg-bone disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {status === 'sending' ? (
-                <>
-                  <Loader className="spin h-4 w-4" aria-hidden="true" />
-                  <span>{copy.sending}</span>
-                </>
-              ) : (
-                <>
-                  <Send className="h-4 w-4" aria-hidden="true" />
-                  <span>{copy.submit}</span>
-                </>
+            <div aria-live="polite">
+              {status === 'sending' && (
+                <p role="status" className="sr-only">{copy.sending}</p>
               )}
-            </button>
-          </div>
-        </form>
+              {status === 'success' && (
+                <p role="status" className="flex items-center gap-2 rounded-xl border-2 border-carbon bg-carbon px-4 py-3 text-base text-bone">
+                  <CircleCheck className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  {copy.success}
+                </p>
+              )}
+            </div>
+            {status === 'error' && (
+              <div
+                ref={failureRef}
+                tabIndex={-1}
+                role="alert"
+                className="flex items-start gap-2 rounded-xl border-2 border-carbon bg-bone px-4 py-3 text-base text-carbon"
+              >
+                <CircleAlert className="mt-1 h-4 w-4 shrink-0" aria-hidden="true" />
+                <span>
+                  {copy.failure}{' '}
+                  <a href={`mailto:${email}`} className="font-semibold text-carbon underline underline-offset-4">
+                    {email}
+                  </a>
+                </span>
+              </div>
+            )}
+
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={status === 'sending'}
+                className="press inline-flex h-12 items-center gap-2 rounded-xl border border-carbon bg-carbon px-8 font-semibold text-bone hover:bg-bone hover:text-carbon disabled:cursor-not-allowed"
+              >
+                {status === 'sending' ? (
+                  <>
+                    <Loader className="spin h-4 w-4" aria-hidden="true" />
+                    <span>{copy.sending}</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4" aria-hidden="true" />
+                    <span>{copy.submit}</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </section>
   );

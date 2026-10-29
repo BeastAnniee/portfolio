@@ -1,6 +1,6 @@
 import type { Dictionary } from '@/content/types.ts';
 import { facts } from '@/content/facts.ts';
-import { formatFicha } from '@/lib/ficha.ts';
+import { formatFicha, formatSectionFicha } from '@/lib/ficha.ts';
 import SectionHeading from './SectionHeading';
 
 interface AchievementsProps {
@@ -13,7 +13,7 @@ const micro = 'font-mono text-xs uppercase tracking-[0.12em] text-bone-2';
 
 const Achievements = ({ copy, ficha }: AchievementsProps) => (
   <section id="achievements" aria-labelledby="achievements-title" className="@container py-10">
-    <SectionHeading id="achievements-title">{copy.title}</SectionHeading>
+    <SectionHeading id="achievements-title" ficha={formatSectionFicha('achievements')}>{copy.title}</SectionHeading>
 
     <ul>
       {facts.achievements.map((achievement, index) => {
