@@ -1,6 +1,6 @@
 # Portfolio — Jostin Aldair Nava López
 
-A personal portfolio built with Next.js, TypeScript, and Tailwind CSS. Showcases selected projects, skills, and contact information with a modern, animated, and accessible UI.
+A personal portfolio built with Next.js, TypeScript, and Tailwind CSS. Three pages per language (Home, Work and About) tell a short story: who I am, what I have built and how I got here.
 
 ![Portfolio Screenshot](public/portfolio.png)
 
@@ -9,11 +9,12 @@ A personal portfolio built with Next.js, TypeScript, and Tailwind CSS. Showcases
 ## ✨ Features
 
 - **Modern stack:** Next.js (App Router), React, TypeScript, Tailwind CSS
-- **Motion in plain CSS** (transform and opacity only), with `prefers-reduced-motion` respected
+- **Three pages, two languages:** `/[lang]` (Home), `/[lang]/work` and `/[lang]/about` for `en` and `es`; the language switch keeps the current page and old `#anchors` of the former single page redirect to the right page
+- **Motion with GSAP + ScrollTrigger** (hero entrance, section reveals, scrubbed hero photo, page curtain), lazy-loaded from `src/animation/`; everything is visible by default, so it degrades to a static page without JavaScript, if GSAP fails to load or with `prefers-reduced-motion`
 - **Responsive** and mobile-first design
 - **Accessible**: keyboard navigation, aria labels
 - **Contact form** with EmailJS integration and toast feedback
-- **Project cards** with hover and reveal animations
+- **Project cards** with scroll reveals; two featured projects on Home, full cards on Work
 - **Dark color palette** for a focused UI
 
 ---
@@ -48,8 +49,8 @@ A personal portfolio built with Next.js, TypeScript, and Tailwind CSS. Showcases
 
 ## 🛠️ Customization
 
-- Edit your info and links in `src/components/Hero.tsx` and `Footer.tsx`; text lives in `src/content/` (English and Spanish).
-- Add or update projects in `src/components/Projects.tsx`.
+- Edit your info and links in `src/components/Hero.tsx` and `Footer.tsx`; text lives in `src/content/` (English and Spanish) and data in `src/content/facts.ts`.
+- Add or update projects in `facts.projects` (`spotlight` shows on Home as a summary and on Work as full cards; `lab` shows in the Lab on Work). Which section lives on which page is set in `src/content/pages.ts`.
 - Update contact methods and social links in `Footer.tsx`.
 - Change the 404 message in `src/app/global-not-found.tsx`.
 - Styles are easily customizable via Tailwind classes.
@@ -70,7 +71,7 @@ Deploy easily on [Vercel](https://vercel.com/) (recommended for Next.js):
 - [React](https://react.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
-- [Framer Motion](https://www.framer.com/motion/)
+- [GSAP](https://gsap.com/) + ScrollTrigger (animation, ADR-0002; loaded lazily from `src/animation/`)
 - [EmailJS](https://www.emailjs.com/) (for contact form)
 
 ---

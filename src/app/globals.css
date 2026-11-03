@@ -103,30 +103,111 @@
   animation: fade-in 0.25s ease-out;
 }
 
-/* Titulares que suben desde una máscara. El estado base es el final:
-   sin JS ni animación el texto se ve (animation-fill-mode: backwards). */
-@keyframes rise {
-  from { transform: translateY(105%); }
-  to { transform: translateY(0); }
-}
-
 .mask {
   overflow: hidden;
   padding: 0.06em 0;
 }
 
+/* Titulares que suben desde una máscara. El estado base es el final: sin JS ni GSAP el texto se ve.
+   Los mueve GSAP (src/animation); el nombre completo va en .sr-only. */
 .rise {
   display: inline-block;
   vertical-align: top;
-  animation: rise 200ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
-  animation-delay: calc(var(--i, 0) * 18ms);
 }
 
-/* Nombre recortado por el borde inferior del marco (--cut = 0 lo desactiva) */
-.name-cut {
-  --cut: .07em;
-  clip-path: inset(0 0 var(--cut) 0);
-  margin-bottom: calc(var(--cut) * -1);
+/* Estado de espera (contrato 004 §6): un script inline lo pone solo sin reduced-motion y PageMotion lo quita al
+   arrancar, ante un error de import() o a los 1200 ms. Oculta solo letras, [data-enter] y la imagen del Hero
+   (escala); nunca la foto (LCP), la barra ni los controles. */
+html[data-gsap='wait'] .rise { transform: translateY(105%); }
+html[data-gsap='wait'] [data-enter] { opacity: 0; }
+html[data-gsap='wait'] [data-hero-photo] img { transform: scale(1.12); }
+/* Contenido y titulares de sección fuera del Hero y de la cabecera de página: su entrada (reveal.ts) arranca oculta, también
+   en la primera pantalla. Los bloques [data-block] solo suben: su fondo nunca arranca transparente. */
+html[data-gsap='wait'] [data-rise]:not(:where(#hero, [data-page-intro]) *) { transform: translateY(105%); }
+html[data-gsap='wait'] :is([data-reveal], [data-reveal-item]):not([data-block], :where(#hero, [data-page-intro]) *) { opacity: 0; }
+
+/* Hero a pantalla completa (004): sin marco; alto = viewport menos la barra (4 rem) */
+.hero-screen {
+  min-height: 34rem;
+  min-height: calc(100svh - 4rem);
+}
+
+.hero-name {
+  font-size: clamp(5rem, 34vw, 9rem);
+}
+
+/* Rejilla por áreas: el DOM sigue el orden móvil y ≥ 42 rem se reordena. La foto móvil llena el alto (mín. 30 svh) */
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto auto minmax(30svh, 1fr) auto auto;
+  grid-template-areas:
+    'greet pin'
+    'name name'
+    'role role'
+    'cta cta'
+    'photo photo'
+    'icons icons'
+    'summary summary';
+  row-gap: 0.75rem;
+  padding-block: 1.5rem;
+}
+
+.ha-greet { grid-area: greet; }
+.ha-pin { grid-area: pin; }
+.ha-name { grid-area: name; }
+.ha-role { grid-area: role; }
+.ha-cta { grid-area: cta; }
+.ha-photo { grid-area: photo; }
+.ha-icons { grid-area: icons; }
+.ha-summary { grid-area: summary; }
+
+/* ≥ 42 rem: texto ≈ 58 % de la pantalla alineado al contenedor; la foto sale de flujo, pegada al borde derecho,
+   de la barra al fondo del Hero. La anchura del texto deja ≥ 48 px hasta la foto. */
+@media (min-width: 42rem) {
+  .hero-name {
+    font-size: min(13vw, 18svh);
+  }
+
+  .hero-grid {
+    width: calc(58vw - max(0px, (100vw - 80rem) / 2) - 5.5rem);
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: none;
+    grid-template-areas:
+      'greet pin'
+      'name name'
+      'role role'
+      'cta cta'
+      'icons icons'
+      'summary summary';
+    align-content: space-between;
+    row-gap: 0.5rem;
+    padding-block: 2rem;
+  }
+
+  .ha-photo {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 42%;
+  }
+}
+
+@media (min-width: 64rem) {
+  .hero-grid {
+    grid-template-columns: auto auto minmax(0, 1fr);
+    grid-template-areas:
+      'greet greet pin'
+      'name name name'
+      'role role role'
+      'cta icons .'
+      'summary summary summary';
+  }
+
+  .ha-icons {
+    margin-left: 1rem;
+  }
 }
 
 /* Pegatina: un solo transform (rotación), sin escala */
@@ -179,16 +260,8 @@
   }
 }
 
-/* Filetes que se dibujan: pseudo-elementos con borde real (visibles en forced-colors) */
-@keyframes draw-x {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
-@keyframes draw-y {
-  from { transform: scaleY(0); }
-  to { transform: scaleY(1); }
-}
+/* Filetes que se dibujan: pseudo-elementos con borde real (visibles en forced-colors). GSAP anima --p de 0 a 1
+   con el scroll; sin JS ni GSAP vale 1 y el filete está dibujado. */
 
 .rule-x,
 .rule-y {
@@ -203,7 +276,7 @@
   right: 0;
   border-top: 1px solid var(--color-line);
   transform-origin: left center;
-  animation: draw-x 500ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  transform: scaleX(var(--p, 1));
 }
 
 .rule-x::before {
@@ -222,7 +295,7 @@
   bottom: 0;
   border-left: 1px solid var(--color-line);
   transform-origin: center top;
-  animation: draw-y 500ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  transform: scaleY(var(--p, 1));
 }
 
 .rule-y::before {
@@ -240,6 +313,15 @@
 
 .press:active {
   transform: scale(0.97);
+}
+
+/* Flecha de NextBand: solo transform; se desplaza con hover real y con el foco del enlace */
+.next-arrow {
+  transition: transform 150ms;
+}
+
+.next-link:focus-visible .next-arrow {
+  transform: translateX(8px);
 }
 
 /* Spinner de envío */
@@ -263,6 +345,15 @@
   transform-origin: 50% 50%;
 }
 
+/* El sello (decorativo, > 5 s) se detiene con el foco dentro del Hero (teclado) y no gira donde no hay hover (WCAG 2.2.2) */
+#hero:focus-within .badge-spin { animation-play-state: paused; }
+
+/* Con el cursor encima el sello crece un poco, se detiene y la flecha gira; el color cambia al instante */
+.badge-hover { transition: transform 150ms ease-out; }
+.badge-hover:hover { transform: scale(1.05); }
+.badge-arrow { transition: transform 150ms ease-out; }
+.badge-hover:hover .badge-arrow { transform: rotate(45deg); }
+
 /* Cinta de créditos */
 @keyframes marquee {
   from { transform: translateX(0); }
@@ -275,10 +366,19 @@
   animation: marquee var(--dur, 45s) linear infinite;
 }
 
-/* La pausa de la cinta detiene todo el movimiento continuo (WCAG 2.2.2) */
-html[data-motion-paused] .badge-spin,
-html[data-motion-paused] .marquee-track {
+/* La cinta se detiene con el cursor encima o con el foco dentro (WCAG 2.2.2) */
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
   animation-play-state: paused;
+}
+
+/* Sin hover (táctil y teclado sin puntero) la cinta no se mueve: quieta, legible y sin copia duplicada */
+@media (hover: none) {
+  .badge-spin { animation: none; }
+  .marquee-track { animation: none; flex-wrap: wrap; width: auto; }
+  .marquee-list { flex-wrap: wrap; flex-shrink: 1; min-width: 0; }
+  .marquee-list li { white-space: normal; }
+  .marquee-copy { display: none; }
 }
 
 /* =========================
@@ -387,6 +487,10 @@ html[data-motion-paused] .marquee-track {
   .sticker:hover {
     --r: -12deg;
   }
+
+  .next-link:hover .next-arrow {
+    transform: translateX(8px);
+  }
 }
 
 /* Las anclas de sección y el foco por teclado quedan bajo el encabezado fijo */
@@ -409,18 +513,20 @@ html {
   }
 
   .badge-spin, .marquee-track, .spin { animation: none !important; }
-  .rise, .parallax, .rule-x, .rule-y { animation: none; }
+  .parallax { animation: none; }
   .sticker { transition: none; }
+  .badge-hover, .badge-arrow { transition: none; }
+  .badge-hover:hover { transform: none; }
+  .next-arrow { transition: none; }
+  .next-link:hover .next-arrow, .next-link:focus-visible .next-arrow { transform: none; }
   .sticker:hover, .sticker:focus-visible { --r: -6deg; }
   .lab-preview { display: none !important; }
-  .rule-x::before, .rule-x::after, .rule-y::before, .rule-y::after { animation: none; }
 
-  /* El marquee queda detenido, visible y legible: sin copia y sin botón que pausar */
+  /* El marquee queda detenido, visible y legible: sin copia */
   .marquee-track { flex-wrap: wrap; width: auto; }
   .marquee-list { flex-wrap: wrap; flex-shrink: 1; min-width: 0; }
   .marquee-list li { white-space: normal; }
   .marquee-copy { display: none; }
-  .marquee-pause { display: none; }
 }
 
 @media (forced-colors: active) {

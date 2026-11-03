@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { negotiateLocale } from './locale.ts'
+import { localeHash, negotiateLocale, withLocaleHash } from './locale.ts'
 
 const cases: Array<[string | null | undefined, 'en' | 'es']> = [
   ['es-MX,es;q=0.9,en;q=0.8', 'es'],
@@ -29,13 +29,20 @@ for (const [header, expected] of cases) {
   })
 }
 
-test('switchLocaleHref cambia de idioma y conserva un ancla válida', async () => {
-  const { switchLocaleHref } = await import('./locale.ts')
-  assert.equal(switchLocaleHref('en', '#experience'), '/es#experience')
-  assert.equal(switchLocaleHref('es', '#projects'), '/en#projects')
-  assert.equal(switchLocaleHref('es', ''), '/en')
-  assert.equal(switchLocaleHref('en', '#'), '/es')
-  assert.equal(switchLocaleHref('en', '#<script>'), '/es')
-  assert.equal(switchLocaleHref('en', '#a b'), '/es')
-  assert.equal(switchLocaleHref('en', '#Experience'), '/es')
+test('localeHash conserva solo un ancla de letras minúsculas', () => {
+  for (const hash of ['#lab', '#projects', '#about', '#contact', '#now']) {
+    assert.equal(localeHash(hash), hash)
+  }
+  for (const hash of ['#<script>', '#', '', '#Lab', '#WORK', '#exp-1', '#now?x=1', '#a b', 'lab', ' #lab', '#lab ', '#lab\n', null, undefined]) {
+    assert.equal(localeHash(hash), '', String(hash))
+  }
+})
+
+test('withLocaleHash añade el ancla válida a la ruta de idioma y descarta el resto', () => {
+  assert.equal(withLocaleHash('/es/work', '#lab'), '/es/work#lab')
+  assert.equal(withLocaleHash('/es/work', '#<script>'), '/es/work')
+  assert.equal(withLocaleHash('/es/about', '#Education'), '/es/about')
+  assert.equal(withLocaleHash('/es/about', ''), '/es/about')
+  assert.equal(withLocaleHash('/es/about', null), '/es/about')
+  assert.equal(withLocaleHash('/es/about', undefined), '/es/about')
 })

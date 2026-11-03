@@ -13,10 +13,10 @@ const SignatureBadge = ({ text }: { text: string }) => {
   const glyphs = badgeGlyphs(text);
 
   return (
-    <div data-badge className="relative shrink-0" style={{ width: box, height: box }} aria-hidden="true">
+    <div data-badge className="badge-hover group relative shrink-0" style={{ width: box, height: box }} aria-hidden="true">
       <svg viewBox={`0 0 ${box} ${box}`} width={box} height={box} className="absolute inset-0">
         <circle cx={c} cy={c} r={c - 0.5} className="fill-carbon stroke-line" strokeWidth={1} />
-        <g className="badge-spin">
+        <g className="badge-spin group-hover:[animation-play-state:paused]">
           {glyphs.map((glyph, i) => (
             <text
               key={i}
@@ -32,10 +32,10 @@ const SignatureBadge = ({ text }: { text: string }) => {
         </g>
       </svg>
       <div
-        className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-accent"
+        className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-accent group-hover:bg-bone"
         style={{ width: 2 * r - 28, height: 2 * r - 28 }}
       >
-        <ArrowUpRight className="h-5 w-5 text-carbon" />
+        <ArrowUpRight className="badge-arrow h-5 w-5 text-carbon" />
       </div>
     </div>
   );

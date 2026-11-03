@@ -39,18 +39,23 @@ sesión sin decirlo primero.
 
 ## Sistema de diseño
 
-El sistema vigente es el **póster oscuro con carácter propio** de la spec 003 (carbón, hueso y un solo
+El sistema vigente es el **póster oscuro con carácter propio** (carbón, hueso y un solo
 acento rosa saturado; Anton + Work Sans + IBM Plex Mono; marcos de línea fina, textura y ornamentos,
-sin sombras ni degradados). La fuente de verdad es `docs/design/DESIGN.md` y el contrato
-`docs/specs/003-poster-caracter/design.md`;
-`references/design-system.md` los resume. Cualquier trabajo visual nuevo respeta esos tokens y
+sin sombras ni degradados), en un sitio de **tres páginas** (`/[lang]`,
+`/[lang]/work`, `/[lang]/about`) con narrativa Home → Trabajo → Sobre mí y animación con GSAP +
+ScrollTrigger (`src/animation/`, una sola dependencia de animación, `gsap`). La fuente de
+verdad es `docs/design/DESIGN.md`;
+`references/design-system.md` lo resume. Cualquier trabajo visual nuevo respeta esos tokens y
 pasa por `/tc-design`; no mezcles restos de sistemas anteriores.
 
 - Usa el skill `dataviz` de Claude Code para visualizaciones de datos si aparecen.
 - No instales skills de terceros para diseño sin que Jostin revise el código fuente primero: un
   skill de terceros puede inyectar instrucciones que se siguen en cada sesión.
 
-## Checklist para agregar un proyecto nuevo a `Projects.tsx`
+## Checklist para agregar un proyecto nuevo (`facts.projects`)
+
+Un proyecto `spotlight` se muestra como resumen en Home y como tarjeta completa en Trabajo (`/[lang]/work`);
+uno `lab`, solo en el Lab de Trabajo. Cada página y sus secciones se declaran en `src/content/pages.ts`.
 
 Cuando uno de los 2 proyectos nuevos del roadmap (o cualquier proyecto futuro) esté listo para
 mostrarse:
@@ -74,4 +79,5 @@ mostrarse:
 - `npm run lint` limpio antes de cerrar cualquier cambio de código.
 - No romper el build (`npm run build`) en cambios que toquen componentes compartidos o config.
 - No agregar dependencias nuevas sin justificar por qué no alcanza con lo ya instalado
-  (Next, React, Tailwind, Framer Motion, lucide-react ya cubren la mayoría de necesidades de UI).
+  (Next, React, Tailwind, GSAP, lucide-react ya cubren la mayoría de necesidades de UI; la animación va
+en `src/animation/` con el contenido visible por defecto y sin `@gsap/react` ni más plugins sin un ADR).

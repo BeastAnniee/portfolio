@@ -54,7 +54,7 @@ const HEX = {
   line: '#7A766D',
   accent: '#EE5583',
 }
-// Tabla de pares de docs/specs/003-poster-caracter/design.md §2 (la fila del foco se parte en dos pares).
+// Tabla de pares de contraste del sistema póster (la fila del foco se parte en dos pares).
 const TEXT_PAIRS: Pair[] = [
   { fg: 'bone', bg: 'carbon', threshold: 4.5, documented: 14.52, use: 'texto principal' },
   { fg: 'bone', bg: 'carbon-2', threshold: 4.5, documented: 13.29, use: 'campos y botón de Contact' },
@@ -169,20 +169,33 @@ test('existen las clases del catálogo de movimiento e imagen', () => {
 
 test('prefers-reduced-motion detiene lo infinito y deja el marquee legible', () => {
   assert.match(reduced, /\.badge-spin, \.marquee-track, \.spin \{ animation: none !important;? \}/)
-  assert.match(reduced, /\.rise, \.parallax, \.rule-x, \.rule-y \{ animation: none;? \}/)
+  assert.match(reduced, /\.parallax \{ animation: none;? \}/)
+  assert.doesNotMatch(reduced, /\.rise\b|\.rule-[xy]\b/, 'los titulares y filetes ya no se animan con CSS: no hay nada que apagar')
   assert.match(reduced, /\.marquee-track \{[^}]*flex-wrap: wrap/)
   assert.match(reduced, /\.marquee-copy \{ display: none;? \}/)
-  assert.match(reduced, /\.marquee-pause \{ display: none;? \}/)
   assert.match(reduced, /animation-duration: 0\.01ms/, 'se conserva el acortamiento global')
 })
 
-test('la pausa de la cinta detiene también el sello (WCAG 2.2.2) y el noscript deja la cinta legible', () => {
-  assert.match(flat, /html\[data-motion-paused\] \.badge-spin,\s*html\[data-motion-paused\] \.marquee-track\s*\{\s*animation-play-state: paused/)
+test('la cinta se para con cursor o foco y queda quieta y legible donde no hay hover (sin botón)', () => {
+  assert.match(
+    flat,
+    /\.marquee:hover \.marquee-track, \.marquee:focus-within \.marquee-track \{ animation-play-state: paused;? \}/,
+  )
+  const touch = blocks('@media (hover: none)').join(' ')
+  assert.match(touch, /\.marquee-track \{[^}]*animation: none/, 'sin hover la cinta no anima')
+  assert.match(touch, /\.marquee-track \{[^}]*flex-wrap: wrap/, 'sin hover el contenido se lee entero')
+  assert.match(touch, /\.marquee-list \{[^}]*flex-wrap: wrap/)
+  assert.match(touch, /\.marquee-list li \{[^}]*white-space: normal/)
+  assert.match(touch, /\.marquee-copy \{ display: none;? \}/, 'sin hover no se ve la copia duplicada')
+  assert.doesNotMatch(flat, /data-motion-paused/)
+  // WCAG 2.2.2: el teclado alcanza la pausa (la cinta es enfocable) y el sello gira solo con puntero fino
   const marquee = readFileSync(join(process.cwd(), 'src/components/Marquee.tsx'), 'utf8')
-  assert.match(marquee, /documentElement/)
-  assert.match(marquee, /data-motion-paused|motionPaused/)
+  assert.match(marquee, /role="group"[\s\S]*?tabIndex=\{0\}/, 'la cinta es enfocable para que :focus-within la pause')
+  assert.match(flat, /#hero:focus-within \.badge-spin \{ animation-play-state: paused;? \}/, 'foco dentro del Hero detiene el sello')
+  assert.match(touch, /\.badge-spin \{ animation: none;? \}/, 'sin hover el sello no gira')
+  assert.doesNotMatch(marquee, /<button|useState|documentElement/)
   const noscript = marquee.match(/<noscript>[\s\S]*<\/noscript>/)?.[0] ?? ''
-  for (const part of ['animation:none', 'flex-wrap:wrap', 'width:auto', '.marquee-copy{display:none}', '.marquee-pause{display:none}']) {
+  for (const part of ['animation:none', 'flex-wrap:wrap', 'width:auto', '.marquee-copy{display:none}']) {
     assert.ok(noscript.includes(part), `noscript sin ${part}`)
   }
 })
@@ -256,16 +269,16 @@ test('sin transition: all, sombras ni degradados', () => {
   assert.doesNotMatch(flat, /gradient\(/)
 })
 
-test('duraciones del catálogo: letras 200 ms/18 ms, filetes 500 ms, press 120 ms, capas 200 ms', () => {
-  const rise = rule('.rise')
-  assert.ok(rise.includes(`${LETTER_DURATION_MS}ms`), rise)
-  assert.match(rise, /backwards/)
-  assert.ok(rise.includes(`calc(var(--i, 0) * ${LETTER_STEP_MS}ms)`), rise)
+test('duraciones del catálogo: letras 500 ms/25 ms (constantes de GSAP), press 120 ms, capas 200 ms', () => {
+  assert.equal(LETTER_DURATION_MS, 500)
+  assert.equal(LETTER_STEP_MS, 25)
+  assert.doesNotMatch(rule('.rise'), /animation/, 'las letras las mueve GSAP; sin JS quedan en su sitio')
+  assert.doesNotMatch(flat, /@keyframes (rise|draw-x|draw-y)/)
   for (const sel of ['.rule-x::before, .rule-x::after', '.rule-y::before, .rule-y::after']) {
-    const r = rule(sel)
-    assert.match(r, /500ms/, sel)
-    assert.match(r, /backwards/, sel)
+    assert.doesNotMatch(rule(sel), /animation/, sel)
   }
+  assert.match(rule('.rule-x::before, .rule-x::after'), /transform: scaleX\(var\(--p, 1\)\)/)
+  assert.match(rule('.rule-y::before, .rule-y::after'), /transform: scaleY\(var\(--p, 1\)\)/)
   assert.match(rule('.press'), /transform 120ms/)
   assert.match(rule('.duo-layer'), /opacity 200ms/)
   assert.match(rule('.spin'), /900ms/)
@@ -340,11 +353,25 @@ test('parallax: CSS scroll-driven solo con soporte, la mitad de amplitud bajo 76
   assert.match(drift, /translateY\(var\(--d\)\)/)
 })
 
-test('nombre recortado por abajo: --cut .07em con margen negativo compensado', () => {
-  const r = rule('.name-cut')
-  assert.match(r, /--cut: \.07em/)
-  assert.match(r, /clip-path: inset\(0 0 var\(--cut\) 0\)/)
-  assert.match(r, /margin-bottom: calc\(var\(--cut\) \* -1\)/)
+test('Hero a pantalla completa: alto con svh (respaldo en rem), nombre en 3 líneas y sin recorte de marco', () => {
+  assert.doesNotMatch(flat, /\.name-cut|--cut/, 'el marco del Hero ya no existe')
+  assert.match(rule('.hero-screen'), /min-height: 34rem; min-height: calc\(100svh - 4rem\);/)
+  assert.match(rule('.hero-name'), /font-size: clamp\(5rem, 34vw, 9rem\);/)
+  assert.match(blocks('@media (min-width: 42rem)').join(' '), /\.hero-name \{ font-size: min\(13vw, 18svh\);? \}/)
+})
+
+test('Hero: rejilla por áreas (móvil en el orden del DOM; ≥ 42 rem reordena) y foto fuera de flujo a sangre', () => {
+  const mobile = rule('.hero-grid')
+  assert.match(mobile, /display: grid/)
+  assert.match(mobile, /minmax\(30svh, 1fr\)/, 'la foto móvil llena el alto con un mínimo de 30 svh')
+  for (const area of ['greet', 'pin', 'name', 'role', 'cta', 'photo', 'icons', 'summary']) {
+    assert.match(mobile, new RegExp(area), `área ${area}`)
+  }
+  const wide = blocks('@media (min-width: 42rem)').join(' ')
+  assert.match(wide, /\.hero-grid \{[^}]*align-content: space-between/)
+  assert.match(wide, /\.ha-photo \{[^}]*position: absolute/)
+  assert.match(wide, /\.ha-photo \{[^}]*right: 0/)
+  assert.match(wide, /\.ha-photo \{[^}]*width: 42%/)
 })
 
 test('vista previa del Lab: transform 120 ms y opacity 150 ms; solo se muestra con data-preview en ≥ 48 rem', () => {
@@ -370,4 +397,31 @@ test('ningún transition anima propiedades distintas de transform y opacity', ()
       assert.ok(['transform', 'opacity', 'none'].includes(prop), `transition de «${prop}»`)
     }
   }
+})
+
+test('flecha de NextBand: solo transform (150 ms), desplazamiento con hover real y foco, quieta con reduced-motion', () => {
+  assert.match(rule('.next-arrow'), /transition: transform 150ms;/)
+  assert.match(blocks('@media (hover: hover)').join(' '), /\.next-link:hover \.next-arrow \{ transform: translateX\(8px\);? \}/)
+  assert.match(rule('.next-link:focus-visible .next-arrow'), /transform: translateX\(8px\);/)
+  assert.match(reduced, /\.next-arrow \{ transition: none;? \}/)
+  assert.match(reduced, /\.next-link:hover \.next-arrow, \.next-link:focus-visible \.next-arrow \{ transform: none;? \}/)
+})
+
+test('estado de espera de GSAP: solo letras, [data-enter] y la imagen del Hero; nunca la foto, la barra ni los controles', () => {
+  assert.match(flat, /html\[data-gsap='wait'\] \.rise \{ transform: translateY\(105%\);? \}/)
+  assert.match(flat, /html\[data-gsap='wait'\] \[data-enter\] \{ opacity: 0;? \}/)
+  assert.match(flat, /html\[data-gsap='wait'\] \[data-hero-photo\] img \{ transform: scale\(1\.12\);? \}/)
+  const waiting = [...flat.matchAll(/html\[data-gsap='wait'\][^{]*\{[^}]*\}/g)].map((m) => m[0])
+  // 004: la entrada de la primera pantalla (reveal.ts) arranca oculta, salvo bloques y lo que orquestan Hero y PageIntro
+  assert.match(flat, /html\[data-gsap='wait'\] \[data-rise\]:not\(:where\(#hero, \[data-page-intro\]\) \*\) \{ transform: translateY\(105%\);? \}/)
+  assert.match(
+    flat,
+    /html\[data-gsap='wait'\] :is\(\[data-reveal\], \[data-reveal-item\]\):not\(\[data-block\], :where\(#hero, \[data-page-intro\]\) \*\) \{ opacity: 0;? \}/,
+  )
+  assert.equal(waiting.length, 5, 'solo cinco reglas de espera')
+  for (const r of waiting) {
+    assert.doesNotMatch(r, /header|button|\bnav\b|input|textarea|\.duo\b|duo-layer/, r)
+  }
+  const photo = waiting.find((r) => r.includes('[data-hero-photo]')) ?? ''
+  assert.doesNotMatch(photo, /opacity|visibility|display/, 'la foto (LCP) nunca se oculta')
 })

@@ -1,6 +1,6 @@
-/** Titular por letras: paso y duración del escalonado (contrato 003 §6). */
-export const LETTER_STEP_MS = 18
-export const LETTER_DURATION_MS = 200
+/** Titular por letras: paso y duración del escalonado (contrato 004 §6, M1; lo ejecuta GSAP desde src/animation/specs.ts). */
+export const LETTER_STEP_MS = 25
+export const LETTER_DURATION_MS = 500
 
 export type Letter = { char: string; index: number }
 

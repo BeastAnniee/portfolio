@@ -15,17 +15,8 @@ export const es: Dictionary = {
     menuOpen: 'Abrir menú',
     menuClose: 'Cerrar menú',
     cv: 'CV',
-    sections: {
-      hero: 'Inicio',
-      now: 'Ahora',
-      experience: 'Experiencia',
-      projects: 'Proyectos',
-      stack: 'Stack',
-      achievements: 'Logros',
-      education: 'Educación',
-      lab: 'Laboratorio',
-      contact: 'Contacto',
-    },
+    pages: { work: 'Trabajo', about: 'Sobre mí' },
+    contact: 'Contacto',
     language: { label: 'Idioma', en: 'English', es: 'Español', current: 'idioma actual' },
   },
   hero: {
@@ -40,9 +31,19 @@ export const es: Dictionary = {
     photoAlt: 'Retrato de Jostin Aldair Nava',
     badge: 'DISPONIBLE PARA TRABAJAR • ',
   },
+  pages: {
+    work: { title: 'Trabajo', intro: 'Proyectos destacados, Now y el Lab.' },
+    about: { title: 'Sobre mí', intro: 'Experiencia, logros y educación.' },
+  },
+  home: { allWork: 'Ver todos los proyectos', fullExperience: 'Experiencia completa' },
+  next: {
+    label: 'Siguiente',
+    toWork: 'Ese soy yo. Sigue: lo que he construido.',
+    toAbout: 'Ese es mi trabajo. Sigue: cómo llegué hasta aquí.',
+  },
   ficha: { exp: 'EXP.', proj: 'PROY.', lab: 'LAB', ach: 'LOGRO', edu: 'EDU.' },
   sticker: { label: 'Escríbeme' },
-  marquee: { label: 'Créditos', pause: 'Pausar animaciones', play: 'Reanudar animaciones' },
+  marquee: { label: 'Créditos' },
   footer: { builtBy: 'Diseñado y construido por Jostin Aldair Nava' },
   common: { copyEmail: 'Copiar correo electrónico', emailCopied: '¡Correo copiado al portapapeles!' },
   notFound: {
@@ -88,25 +89,17 @@ export const es: Dictionary = {
   achievements: {
     title: 'Logros',
     items: {
-      frc: {
-        event: 'FIRST Robotics — FRC TIGRES 6652',
-        result: 'Coordinador administrativo y miembro del equipo; llegada a los Mundiales; competencias en Monterrey, Torreón, Houston y Alabama.',
-      },
-      chairmans: {
-        event: "Chairman's Award — FIRST Championship Houston",
-        result: 'Premio a nivel división.',
-      },
-      deans: {
-        event: "Dean's List Semi-finalist",
-        result: 'Semifinalista con FRC TIGRES 6652.',
+      hackmty2026: {
+        event: 'Hack MTY — Open Innovation de Banorte',
+        result: '3.er lugar con Maya.',
       },
       hackmty2025: {
         event: 'Hack MTY — Open Innovation de Banorte',
         result: '3.er lugar con el equipo Ghekkin.',
       },
-      hackmty2026: {
-        event: 'Hack MTY — Open Innovation de Banorte',
-        result: '3.er lugar con Maya.',
+      frc: {
+        event: 'FIRST Robotics — FRC TIGRES 6652',
+        result: "Coordinador administrativo y miembro del equipo; llegada a los Mundiales; competencias en Monterrey, Torreón, Houston y Alabama. Chairman's Award en el FIRST Championship Houston (nivel división) y Dean's List Semi-finalist.",
       },
       fll: {
         event: 'FIRST LEGO League',
@@ -120,7 +113,7 @@ export const es: Dictionary = {
     openProject: 'Abrir proyecto',
     items: {
       maya: {
-        description: 'Asistente financiero con IA.',
+        description: 'Agente de IA que responde con la pantalla que resuelve tu problema financiero, no con texto: la misma pregunta de dos personas produce dos interfaces distintas.',
         result: '3.er lugar, Open Innovation de Banorte, Hack MTY 2026',
       },
       caustix: {

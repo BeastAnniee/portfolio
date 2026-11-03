@@ -12,6 +12,7 @@ const SectionHeading = ({ id, children, ficha, inverted = false }: SectionHeadin
   <div className="mb-8">
     {ficha && (
       <p
+        data-reveal
         className={`mb-2 font-mono text-xs uppercase tracking-[0.12em] ${inverted ? 'text-carbon' : 'text-bone-2'}`}
       >
         {ficha}
@@ -23,7 +24,9 @@ const SectionHeading = ({ id, children, ficha, inverted = false }: SectionHeadin
         inverted ? 'text-carbon' : 'text-accent'
       }`}
     >
-      {children}
+      <span className="mask block">
+        <span data-rise className="block">{children}</span>
+      </span>
     </h2>
   </div>
 );

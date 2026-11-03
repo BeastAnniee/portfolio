@@ -1,11 +1,15 @@
 import type { Dictionary } from '@/content/types.ts';
+import type { PageId } from '@/content/pages.ts';
 import { facts } from '@/content/facts.ts';
-import { formatFicha, formatSectionFicha } from '@/lib/ficha.ts';
+import { formatFicha, formatPageSectionFicha } from '@/lib/ficha.ts';
 import CountUp from './CountUp';
+import { Star4 } from './Ornaments';
 import SectionHeading from './SectionHeading';
 import TechChips from './TechChips';
 
 interface ExperienceProps {
+  /** Página que la monta: la ficha numera por posición dentro de ella. */
+  page: PageId;
   copy: Dictionary['experience'];
   techLabels: Dictionary['techLabels'];
   /** Etiqueta de ficha («EXP.»); el número es el índice real en `facts.experience`. */
@@ -16,12 +20,19 @@ const jobs: readonly (typeof facts.experience)[number][] = facts.experience;
 
 const micro = 'font-mono text-xs uppercase tracking-[0.12em] text-bone-2';
 
-const Experience = ({ copy, techLabels, ficha }: ExperienceProps) => (
-  <section id="experience" aria-labelledby="experience-title" className="@container py-10">
-    <SectionHeading id="experience-title" ficha={formatSectionFicha('experience')}>{copy.title}</SectionHeading>
+const Experience = ({ copy, techLabels, ficha, page }: ExperienceProps) => (
+  <section id="experience" aria-labelledby="experience-title" className="@container py-8 md:py-10">
+    <div className="relative">
+      <div className="pointer-events-none absolute right-0 top-1 text-accent">
+        <Star4 size={28} />
+      </div>
+      <div className="pr-10">
+        <SectionHeading id="experience-title" ficha={formatPageSectionFicha(page, 'experience')}>{copy.title}</SectionHeading>
+      </div>
+    </div>
 
     {jobs.length === 0 ? (
-      <p className="border-t border-line py-6 text-base text-bone">{copy.empty}</p>
+      <p className="rule-x py-6 text-base text-bone">{copy.empty}</p>
     ) : (
       <ol>
         {jobs.map((job, index) => {
@@ -29,7 +40,8 @@ const Experience = ({ copy, techLabels, ficha }: ExperienceProps) => (
           return (
             <li
               key={job.id}
-              className="grid min-w-0 gap-4 border-t border-line py-8 @2xl:grid-cols-12 @2xl:gap-8"
+              data-reveal-item
+              className="rule-x grid min-w-0 gap-4 py-4 @2xl:grid-cols-12 @2xl:py-8 @2xl:gap-8"
             >
               <div className="min-w-0 @2xl:col-span-4">
                 <p className={`mb-2 ${micro}`}>{formatFicha(ficha, index)}</p>
