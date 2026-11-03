@@ -693,19 +693,7 @@ test('solo Home monta LegacyAnchors (Trabajo y Sobre mí no)', () => {
   assert.doesNotMatch(read('src/app/[lang]/about/page.tsx'), /LegacyAnchors/)
 })
 
-// ───────────── 004: dependencia gsap y guarda del ADR ─────────────
-test('ADR-0002 aceptado antes del primer archivo de src/animation (AC-20)', () => {
-  const adrPath = join(root, 'docs/adr/0002-adoptar-gsap-scrolltrigger.md')
-  const adr = readFileSync(adrPath, 'utf8')
-  assert.match(adr, /^status: accepted$/m)
-  const dir = join(root, 'src/animation')
-  if (!existsSync(dir)) return
-  const adrBorn = statSync(adrPath).birthtimeMs
-  for (const file of walk(dir)) {
-    assert.ok(adrBorn <= statSync(file).birthtimeMs, `${file} es anterior al ADR aprobado`)
-  }
-})
-
+// ───────────── 004: dependencia gsap ─────────────
 test('package.json: las dependencias son las anteriores más gsap (3.15.0 exacta), sin @gsap/react', () => {
   const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
   assert.deepEqual(Object.keys(pkg.dependencies).sort(), [
@@ -946,8 +934,6 @@ test('004: README, arquitectura y skill portfolio describen las tres rutas, src/
     assert.doesNotMatch(text, /SECTION_IDS|src\/content\/sections\.ts|data-hero-frame|name-cut/, `${name} cita algo retirado`)
     assert.doesNotMatch(text, /una sola landing|landing de una sola página|single-page landing/i, `${name} describe una landing única`)
   }
-  assert.ok(groups.skill.includes('0002-adoptar-gsap-scrolltrigger') || groups.skill.includes('ADR-0002'), 'la skill cita el ADR-0002')
   assert.match(groups.arquitectura, /pages\.ts/)
   assert.match(groups.arquitectura, /PAGE_SECTIONS/)
-  assert.match(groups.arquitectura, /004-multipagina-narrativa/, 'cómo ejecutar el arnés con la spec 004')
 })

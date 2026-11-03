@@ -54,7 +54,7 @@ const HEX = {
   line: '#7A766D',
   accent: '#EE5583',
 }
-// Tabla de pares de docs/specs/003-poster-caracter/design.md §2 (la fila del foco se parte en dos pares).
+// Tabla de pares de contraste del sistema póster (la fila del foco se parte en dos pares).
 const TEXT_PAIRS: Pair[] = [
   { fg: 'bone', bg: 'carbon', threshold: 4.5, documented: 14.52, use: 'texto principal' },
   { fg: 'bone', bg: 'carbon-2', threshold: 4.5, documented: 13.29, use: 'campos y botón de Contact' },
