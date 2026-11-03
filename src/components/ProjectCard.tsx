@@ -34,6 +34,7 @@ const ProjectCard = ({
 
   return (
     <article
+      {...(inverted ? { 'data-reveal-item': '' } : {})}
       className={`flex min-w-0 flex-col ${inverted ? 'text-carbon' : 'text-bone'} ${className}`}
     >
       {image && (

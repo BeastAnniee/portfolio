@@ -1,26 +1,10 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { Pause, Play } from 'lucide-react';
-
 interface MarqueeProps {
   items: readonly string[];
   label: string;
-  pause: string;
-  play: string;
 }
 
-const Marquee = ({ items, label, pause, play }: MarqueeProps) => {
-  const [paused, setPaused] = useState(false);
-
-  // Un solo mecanismo de pausa para todo el movimiento continuo: cinta y sello
-  useEffect(() => {
-    const root = document.documentElement;
-    if (paused) root.setAttribute('data-motion-paused', '');
-    else root.removeAttribute('data-motion-paused');
-    return () => root.removeAttribute('data-motion-paused');
-  }, [paused]);
-
+// La cinta se detiene con el cursor encima o el foco dentro (el grupo es enfocable: el teclado la pausa con Tab) y no anima donde no hay hover (`hover: none`); sin JS ni estado.
+const Marquee = ({ items, label }: MarqueeProps) => {
   const list = (copy: boolean) => (
     <ul
       className={`marquee-list flex shrink-0 items-center${copy ? ' marquee-copy' : ''}`}
@@ -45,25 +29,16 @@ const Marquee = ({ items, label, pause, play }: MarqueeProps) => {
       <div
         role="group"
         aria-label={label}
-        className="marquee rule-x my-6 flex min-h-12 items-stretch"
+        tabIndex={0}
+        className="marquee rule-x my-6 flex min-h-12 w-full items-center overflow-hidden"
       >
-        <div className="relative flex min-w-0 flex-1 items-center overflow-hidden">
-          <div className="marquee-track items-center">
-            {list(false)}
-            {list(true)}
-          </div>
+        <div className="marquee-track items-center">
+          {list(false)}
+          {list(true)}
         </div>
-        <button
-          type="button"
-          onClick={() => setPaused((value) => !value)}
-          aria-label={paused ? play : pause}
-          className="marquee-pause press my-px flex h-11 w-11 shrink-0 items-center justify-center self-center rounded-xl border border-line text-bone hover:bg-bone hover:text-carbon"
-        >
-          {paused ? <Play className="h-4 w-4" aria-hidden="true" /> : <Pause className="h-4 w-4" aria-hidden="true" />}
-        </button>
       </div>
       <noscript>
-        <style>{'.marquee-track{animation:none;flex-wrap:wrap;width:auto}.marquee-list{flex-wrap:wrap;flex-shrink:1;min-width:0}.marquee-list li{white-space:normal}.marquee-copy{display:none}.marquee-pause{display:none}'}</style>
+        <style>{'.marquee-track{animation:none;flex-wrap:wrap;width:auto}.marquee-list{flex-wrap:wrap;flex-shrink:1;min-width:0}.marquee-list li{white-space:normal}.marquee-copy{display:none}'}</style>
       </noscript>
     </>
   );

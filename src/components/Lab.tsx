@@ -4,14 +4,19 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { ChevronDown } from 'lucide-react';
 import type { Dictionary } from '@/content/types.ts';
+import { LAB_OPEN_EVENT } from '@/animation/config.ts';
+import type { PageId } from '@/content/pages.ts';
 import { facts } from '@/content/facts.ts';
-import { formatFicha, formatSectionFicha } from '@/lib/ficha.ts';
+import { formatFicha, formatPageSectionFicha } from '@/lib/ficha.ts';
 import { anchorOffset, previewOffset, shouldPreview } from '@/lib/lab-preview.ts';
 import { resolveProjectMedia } from '@/lib/project-view.ts';
 import ProjectCard from './ProjectCard';
+import { RingMarks } from './Ornaments';
 import SectionHeading from './SectionHeading';
 
 interface LabProps {
+  /** Página que la monta: la ficha numera por posición dentro de ella. */
+  page: PageId;
   copy: Dictionary['lab'];
   techLabels: Dictionary['techLabels'];
   /** Etiqueta de ficha («LAB»); el número es el índice real en `facts.projects.lab`. */
@@ -23,13 +28,18 @@ const previews = facts.projects.lab.flatMap((project) => {
   return image ? [{ id: project.id, image }] : [];
 });
 
-const Lab = ({ copy, techLabels, ficha }: LabProps) => {
+const Lab = ({ copy, techLabels, ficha, page }: LabProps) => {
   const [open, setOpen] = useState(false);
   // Vista previa solo con cursor real y sin reduced-motion; si no, la imagen está en la propia fila.
   const [preview, setPreview] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const listRef = useRef<HTMLOListElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
+
+  // Al abrir avisa a PageMotion (M7 y refresh de ScrollTrigger); este componente no conoce GSAP.
+  useEffect(() => {
+    if (open) window.dispatchEvent(new Event(LAB_OPEN_EVENT));
+  }, [open]);
 
   useEffect(() => {
     const hover = window.matchMedia('(hover: hover)');
@@ -75,12 +85,16 @@ const Lab = ({ copy, techLabels, ficha }: LabProps) => {
   };
 
   return (
-    <section id="lab" aria-labelledby="lab-title" className="@container py-10">
-      <SectionHeading id="lab-title" ficha={formatSectionFicha('lab')}>{copy.title}</SectionHeading>
-      <p className="mb-4 max-w-[65ch] text-base text-bone">{copy.intro}</p>
+    <section id="lab" aria-labelledby="lab-title" className="@container relative py-10">
+      <div className="pointer-events-none absolute right-0 top-10 hidden text-bone @3xl:block">
+        <RingMarks size={80} />
+      </div>
+      <SectionHeading id="lab-title" ficha={formatPageSectionFicha(page, 'lab')}>{copy.title}</SectionHeading>
+      <p data-reveal-item className="mb-4 max-w-[65ch] text-base text-bone">{copy.intro}</p>
 
       <button
         type="button"
+        data-reveal-item
         aria-expanded={open}
         aria-controls="lab-panel"
         onClick={() => setOpen((value) => !value)}

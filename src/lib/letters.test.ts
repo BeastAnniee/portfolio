@@ -3,10 +3,10 @@ import assert from 'node:assert/strict'
 import { LETTER_DURATION_MS, LETTER_STEP_MS, riseTotalMs, splitLetters } from './letters.ts'
 import { facts } from '../content/facts.ts'
 
-test('el escalonado es corto: paso 18 ms (≤ 40), duración 200 ms', () => {
-  assert.equal(LETTER_STEP_MS, 18)
+test('el escalonado de la entrada del Hero: paso 25 ms (≤ 40), duración 500 ms', () => {
+  assert.equal(LETTER_STEP_MS, 25)
   assert.ok(LETTER_STEP_MS <= 40)
-  assert.equal(LETTER_DURATION_MS, 200)
+  assert.equal(LETTER_DURATION_MS, 500)
 })
 
 test('splitLetters separa palabras y numera las letras de forma continua', () => {
@@ -23,8 +23,8 @@ test('las letras reconstruyen el nombre exacto', () => {
   assert.equal(rebuilt, name)
 })
 
-test('el total del escalonado cabe en 500 ms', () => {
-  assert.equal(riseTotalMs(16), 470)
+test('el total del escalonado cabe en la secuencia de 1,4 s', () => {
+  assert.equal(riseTotalMs(16), 875)
   const n = splitLetters(facts.profile.name).flat().length
-  assert.ok(riseTotalMs(n) <= 500, String(riseTotalMs(n)))
+  assert.ok(riseTotalMs(n) <= 1400, String(riseTotalMs(n)))
 })

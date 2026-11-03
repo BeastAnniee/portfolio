@@ -42,8 +42,14 @@ export function otherLocale(locale: Locale): Locale {
   return locale === 'en' ? 'es' : 'en'
 }
 
-/** Ruta de la misma página en el otro idioma; solo se conserva un ancla del tipo #seccion. */
-export function switchLocaleHref(current: Locale, hash: string): string {
-  const anchor = /^#[a-z-]+$/.test(hash) ? hash : ''
-  return `/${otherLocale(current)}${anchor}`
+/** Ancla que sobrevive al cambio de idioma: solo `#` seguido de letras minúsculas. */
+export function localeHash(hash: string | null | undefined): string {
+  if (typeof hash !== 'string') return ''
+  const match = /^#[a-z]+$/.exec(hash)
+  return match?.[0] === hash ? hash : ''
+}
+
+/** Misma página en el otro idioma, conservando el ancla solo si es válida. */
+export function withLocaleHash(path: string, hash: string | null | undefined): string {
+  return `${path}${localeHash(hash)}`
 }

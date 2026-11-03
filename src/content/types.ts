@@ -1,7 +1,4 @@
-import type { SECTION_IDS } from './index.ts'
 import type { facts } from './facts.ts'
-
-export type SectionId = (typeof SECTION_IDS)[number]
 
 export type ExperienceId = (typeof facts)['experience'][number]['id']
 export type EducationId = (typeof facts)['education'][number]['id']
@@ -30,7 +27,8 @@ export interface Dictionary {
     menuOpen: string
     menuClose: string
     cv: string
-    sections: Record<SectionId, string>
+    pages: { work: string; about: string }
+    contact: string
     language: { label: string; en: string; es: string; current: string }
   }
   hero: {
@@ -44,9 +42,12 @@ export interface Dictionary {
     photoAlt: string
     badge: string
   }
+  pages: { work: { title: string; intro: string }; about: { title: string; intro: string } }
+  home: { allWork: string; fullExperience: string }
+  next: { label: string; toWork: string; toAbout: string }
   ficha: { exp: string; proj: string; lab: string; ach: string; edu: string }
   sticker: { label: string }
-  marquee: { label: string; pause: string; play: string }
+  marquee: { label: string }
   footer: { builtBy: string }
   common: { copyEmail: string; emailCopied: string }
   notFound: { title: string; body: string; home: string }

@@ -1,7 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { formatFicha, formatSectionFicha } from './ficha.ts'
-import { SECTION_IDS } from '../content/sections.ts'
+import { formatFicha } from './ficha.ts'
 import { en } from '../content/en.ts'
 import { facts } from '../content/facts.ts'
 
@@ -28,15 +27,23 @@ test('formatFicha no numera elementos inexistentes', () => {
   assert.throws(() => formatFicha('X', 1.5))
 })
 
-test('formatSectionFicha usa el índice real de la sección (hero 01 … contact 09)', () => {
-  assert.equal(formatSectionFicha('hero'), '[01]')
-  assert.equal(formatSectionFicha('now'), '[02]')
-  assert.equal(formatSectionFicha('contact'), '[09]')
-  SECTION_IDS.forEach((id, i) => {
-    assert.equal(formatSectionFicha(id), `[${String(i + 1).padStart(2, '0')}]`)
-  })
+test('formatPageIndex deriva el índice de la lista de páginas', async () => {
+  const { formatPageIndex } = await import('./ficha.ts')
+  assert.equal(formatPageIndex('home'), '[01/03]')
+  assert.equal(formatPageIndex('work'), '[02/03]')
+  assert.equal(formatPageIndex('about'), '[03/03]')
 })
 
-test('formatSectionFicha rechaza un id fuera de la lista', () => {
-  assert.throws(() => formatSectionFicha('nope' as never))
+test('formatPageSectionFicha numera por posición dentro de su página', async () => {
+  const { formatPageSectionFicha } = await import('./ficha.ts')
+  assert.equal(formatPageSectionFicha('about', 'contact'), '[04]')
+  assert.equal(formatPageSectionFicha('home', 'contact'), '[04]')
+  assert.equal(formatPageSectionFicha('work', 'projects'), '[01]')
+  assert.equal(formatPageSectionFicha('work', 'now'), '[02]')
+  assert.equal(formatPageSectionFicha('work', 'lab'), '[03]')
+})
+
+test('formatPageSectionFicha rechaza una sección que no es de la página', async () => {
+  const { formatPageSectionFicha } = await import('./ficha.ts')
+  assert.throws(() => formatPageSectionFicha('about', 'now'))
 })

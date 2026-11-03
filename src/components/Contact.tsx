@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CircleAlert, CircleCheck, Loader, Send } from 'lucide-react';
 import emailjs from 'emailjs-com';
 import type { Dictionary } from '@/content/types.ts';
+import type { PageId } from '@/content/pages.ts';
 import {
   TIMEOUT_MS,
   readEmailConfig,
@@ -14,10 +15,12 @@ import {
   type ContactError,
   type ContactField,
 } from '@/lib/contact.ts';
-import { formatSectionFicha } from '@/lib/ficha.ts';
+import { formatPageSectionFicha } from '@/lib/ficha.ts';
 import { Parallax, RingMarks, Star4 } from './Ornaments';
 
 interface ContactProps {
+  /** Página que la monta: la ficha numera por posición dentro de ella. */
+  page: PageId;
   copy: Dictionary['contact'];
   email: string;
 }
@@ -31,7 +34,7 @@ const fieldError = 'border-2 border-carbon bg-bone text-carbon placeholder:text-
 
 const emptyData: ContactData = { name: '', email: '', subject: '', message: '' };
 
-const Contact = ({ copy, email }: ContactProps) => {
+const Contact = ({ copy, email, page }: ContactProps) => {
   const [data, setData] = useState<ContactData>(emptyData);
   const [errors, setErrors] = useState<Partial<Record<ContactField, ContactError>>>({});
   const [status, setStatus] = useState<Status>('idle');
@@ -69,7 +72,12 @@ const Contact = ({ copy, email }: ContactProps) => {
     });
     const outcome = await sendContact({
       send: (cfg, payload) =>
-        emailjs.send(cfg.serviceId, cfg.templateId, { ...payload }, cfg.publicKey),
+        emailjs.send(cfg.serviceId, cfg.templateId, { ...payload }, cfg.publicKey).catch((error: unknown) => {
+          // Diagnóstico en producción: solo estado y texto de EmailJS; nunca los datos del formulario ni las claves.
+          const { status: code, text } = error as { status?: number; text?: string };
+          console.error('[contact] EmailJS rechazó el envío:', code, text);
+          throw error;
+        }),
       config,
       data,
       timeoutMs: TIMEOUT_MS,
@@ -79,6 +87,7 @@ const Contact = ({ copy, email }: ContactProps) => {
       setData(emptyData);
       setStatus('success');
     } else {
+      console.error('[contact] envío fallido:', outcome.reason);
       setStatus('error');
     }
   };
@@ -135,8 +144,8 @@ const Contact = ({ copy, email }: ContactProps) => {
   };
 
   return (
-    <section id="contact" aria-labelledby="contact-title" data-block="accent"
-      className="torn-top @container relative overflow-x-clip bg-accent pb-10 pt-20 text-carbon md:pb-44"
+    <section id="contact" aria-labelledby="contact-title" data-block="accent" data-reveal-item
+      className="torn-top @container relative overflow-x-clip bg-accent pb-10 pt-16 text-carbon md:pb-44 md:pt-20"
     >
       <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-64 lg:block" aria-hidden="true">
         <div className="tex tex-paper" aria-hidden="true" />
@@ -152,7 +161,7 @@ const Contact = ({ copy, email }: ContactProps) => {
         <div className="max-w-2xl">
           <div className="mb-8">
             <p className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-carbon">
-              {formatSectionFicha('contact')} {copy.badge}
+              {formatPageSectionFicha(page, 'contact')} {copy.badge}
             </p>
             <h2
               id="contact-title"

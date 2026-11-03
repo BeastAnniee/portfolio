@@ -85,8 +85,7 @@ export const facts = {
     github: 'https://github.com/BeastAnniee',
     linkedin: 'https://www.linkedin.com/in/aldair-nava-dev',
   },
-  // Ambos idiomas apuntan al mismo archivo hasta que lleguen los CV corregidos (REQ-23).
-  cv: { en: '/resume.pdf', es: '/resume.pdf' },
+  cv: { en: '/Jostin_Nava_CV_EN_26.pdf', es: '/Jostin_Nava_CV_ES_26.pdf' },
   now: {
     updatedAt: '2026-10-27',
     cards: [
@@ -96,12 +95,10 @@ export const facts = {
   },
   projects,
   achievements: [
-    { id: 'frc', year: '2021 – 2023' },
-    { id: 'chairmans', year: '2022' },
-    { id: 'deans', year: '2022' },
-    { id: 'hackmty2025', year: '2025' },
     { id: 'hackmty2026', year: '2026' },
-    { id: 'fll', year: null },
+    { id: 'hackmty2025', year: '2025' },
+    { id: 'frc', year: '2021 – 2023' },
+    { id: 'fll', year: '2018 – 2019' },
   ],
   experience: [
     {

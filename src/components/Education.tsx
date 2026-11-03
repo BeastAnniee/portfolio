@@ -1,25 +1,30 @@
 import type { Dictionary } from '@/content/types.ts';
+import type { PageId } from '@/content/pages.ts';
 import { facts } from '@/content/facts.ts';
-import { formatFicha, formatSectionFicha } from '@/lib/ficha.ts';
+import { formatFicha, formatPageSectionFicha } from '@/lib/ficha.ts';
 import SectionHeading from './SectionHeading';
 
 interface EducationProps {
+  /** Página que la monta: la ficha numera por posición dentro de ella. */
+  page: PageId;
   copy: Dictionary['education'];
   /** Etiqueta de ficha («EDU.»); el número es el índice real en `facts.education`. */
   ficha: string;
 }
 
+// Sin textura ni ornamento (excepción justificada de REQ-13): la sección más corta y de menor jerarquía.
 const micro = 'font-mono text-xs uppercase tracking-[0.12em] text-bone-2';
 
-const Education = ({ copy, ficha }: EducationProps) => (
-  <section id="education" aria-labelledby="education-title" className="@container py-10">
-    <SectionHeading id="education-title" ficha={formatSectionFicha('education')}>{copy.title}</SectionHeading>
+const Education = ({ copy, ficha, page }: EducationProps) => (
+  <section id="education" aria-labelledby="education-title" className="@container py-8 md:py-10">
+    <SectionHeading id="education-title" ficha={formatPageSectionFicha(page, 'education')}>{copy.title}</SectionHeading>
 
     <ul>
       {facts.education.map((entry, index) => (
         <li
           key={entry.id}
-          className="grid min-w-0 gap-2 border-t border-line py-5 @2xl:grid-cols-12 @2xl:gap-8"
+          data-reveal-item
+          className="grid min-w-0 gap-2 border-t border-line py-4 @2xl:grid-cols-12 @2xl:py-5 @2xl:gap-8"
         >
           <div className="@2xl:col-span-3">
             <p className={micro}>{formatFicha(ficha, index)}</p>
@@ -33,7 +38,7 @@ const Education = ({ copy, ficha }: EducationProps) => (
       ))}
     </ul>
 
-    <p className="mt-4 max-w-[65ch] border-t border-line pt-5 text-base text-bone">
+    <p data-reveal-item className="mt-4 max-w-[65ch] border-t border-line pt-5 text-base text-bone">
       <span className="font-semibold">{copy.languages.title}: </span>
       {facts.languages
         .map((language) => {

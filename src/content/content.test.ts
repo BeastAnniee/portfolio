@@ -5,7 +5,7 @@ import { join } from 'node:path'
 import { en } from './en.ts'
 import { es } from './es.ts'
 import { facts } from './facts.ts'
-import { getDictionary, SECTION_IDS } from './index.ts'
+import { getDictionary } from './index.ts'
 
 
 /** Recorre un árbol y devuelve [ruta, valor] de cada hoja; los arrays aportan su longitud. */
@@ -98,13 +98,11 @@ test('el CV de cada idioma apunta a un archivo que existe en public/', () => {
   }
 })
 
-test('getDictionary devuelve el diccionario del idioma y SECTION_IDS fija el orden', () => {
+test('getDictionary devuelve el diccionario del idioma y la barra es de páginas', () => {
   assert.equal(getDictionary('en'), en)
   assert.equal(getDictionary('es'), es)
-  assert.deepEqual([...SECTION_IDS], [
-    'hero', 'now', 'experience', 'projects', 'stack', 'achievements', 'education', 'lab', 'contact',
-  ])
-  assert.deepEqual(Object.keys(en.nav.sections), [...SECTION_IDS])
+  assert.ok('pages' in en.nav && 'contact' in en.nav, 'nav lleva pages y contact')
+  assert.ok(!('sections' in en.nav) && !('sections' in es.nav), 'nav.sections se retira (la barra es de páginas)')
 })
 
 
@@ -228,27 +226,26 @@ test('Projects: spotlight = Maya y Caustix; Lab con portfolio y sin Archive', ()
   }
 })
 
-test('Achievements: 4–6 entradas confirmadas, FLL sin años', () => {
-  const confirmed = ['frc', 'chairmans', 'deans', 'hackmty2025', 'hackmty2026', 'fll']
+test('Achievements: orden de importancia (Hack MTY 2026, 2025, FRC, FLL 2018 – 2019), Chairman y Dean dentro de FRC', () => {
+  const confirmed = ['hackmty2026', 'hackmty2025', 'frc', 'fll']
   assert.ok(facts.achievements.length >= 4 && facts.achievements.length <= 6)
   for (const a of facts.achievements) assert.ok(confirmed.includes(a.id), a.id)
   const byId = Object.fromEntries(facts.achievements.map((a) => [a.id, a.year]))
-  assert.equal(byId.chairmans, '2022')
-  assert.equal(byId.deans, '2022')
-  assert.equal(byId.fll, null)
+  assert.deepEqual(facts.achievements.map((a) => a.id), confirmed)
+  assert.equal(byId.fll, '2018 – 2019')
   for (const dict of [en, es]) {
     assert.deepEqual(Object.keys(dict.achievements.items), facts.achievements.map((a) => a.id))
     assert.ok(!/\b(19|20)\d{2}\b/.test(strings(dict.achievements.items.fll).join(' ')))
-    assert.ok(dict.achievements.items.chairmans.event.includes('Houston'))
-    assert.ok(dict.achievements.items.chairmans.event.includes("Chairman's Award"))
-    assert.ok(dict.achievements.items.deans.event.includes("Dean's List Semi-finalist"))
+    assert.ok(dict.achievements.items.frc.result.includes('Houston'))
+    assert.ok(dict.achievements.items.frc.result.includes("Chairman's Award"))
+    assert.ok(dict.achievements.items.frc.result.includes("Dean's List Semi-finalist"))
   }
 })
 
 test('ficha y marquee existen con las mismas claves en en y es', () => {
   assert.deepEqual(Object.keys(en.ficha), ['exp', 'proj', 'lab', 'ach', 'edu'])
   assert.deepEqual(Object.keys(es.ficha), Object.keys(en.ficha))
-  assert.deepEqual(Object.keys(en.marquee), ['label', 'pause', 'play'])
+  assert.deepEqual(Object.keys(en.marquee), ['label'])
   assert.deepEqual(Object.keys(es.marquee), Object.keys(en.marquee))
   for (const dict of [en, es]) {
     for (const value of [...Object.values(dict.ficha), ...Object.values(dict.marquee)]) {
@@ -263,4 +260,57 @@ test('pegatina: la clave sticker.label existe con el microtexto del contrato en 
   assert.ok(en.sticker.label.length > 0 && es.sticker.label.length > 0)
   assert.equal(en.sticker.label, 'Get in touch')
   assert.equal(es.sticker.label, 'Escríbeme')
+})
+
+test('microtexto de hilo y navegación: textos exactos del contrato (EN y ES)', () => {
+  const expected = {
+    en: {
+      pages: { work: 'Work', about: 'About' },
+      contact: 'Contact',
+      pageCopy: {
+        work: { title: 'Work', intro: 'Featured projects, Now and the Lab.' },
+        about: { title: 'About', intro: 'Experience, achievements and education.' },
+      },
+      home: { allWork: 'View all projects', fullExperience: 'Full experience' },
+      next: {
+        label: 'Next',
+        toWork: 'That’s who I am. Next: what I’ve built.',
+        toAbout: 'That’s my work. Next: how I got here.',
+      },
+    },
+    es: {
+      pages: { work: 'Trabajo', about: 'Sobre mí' },
+      contact: 'Contacto',
+      pageCopy: {
+        work: { title: 'Trabajo', intro: 'Proyectos destacados, Now y el Lab.' },
+        about: { title: 'Sobre mí', intro: 'Experiencia, logros y educación.' },
+      },
+      home: { allWork: 'Ver todos los proyectos', fullExperience: 'Experiencia completa' },
+      next: {
+        label: 'Siguiente',
+        toWork: 'Ese soy yo. Sigue: lo que he construido.',
+        toAbout: 'Ese es mi trabajo. Sigue: cómo llegué hasta aquí.',
+      },
+    },
+  } as const
+  for (const [lang, dict] of [['en', en], ['es', es]] as const) {
+    const want = expected[lang]
+    assert.deepEqual(dict.nav.pages, want.pages)
+    assert.equal(dict.nav.contact, want.contact)
+    assert.deepEqual(dict.pages, want.pageCopy)
+    assert.deepEqual(dict.home, want.home)
+    assert.deepEqual(dict.next, want.next)
+  }
+  assert.equal(en.hero.cta, 'Check out my work')
+})
+
+test('el microtexto de hilo no lleva dígitos ni promesas de disponibilidad', () => {
+  for (const dict of [en, es]) {
+    const fresh = strings([dict.nav.pages, dict.nav.contact, dict.pages, dict.home, dict.next])
+    assert.ok(fresh.length >= 12)
+    for (const s of fresh) {
+      assert.ok(!/\d/.test(s), `dígitos en «${s}»`)
+      assert.ok(!/available|disponible/i.test(s), `disponibilidad en «${s}»`)
+    }
+  }
 })
